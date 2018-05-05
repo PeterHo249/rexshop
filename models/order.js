@@ -25,8 +25,7 @@ var OrderSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
-        required: true
+        type: Date
     },
     status: {
         type: String,

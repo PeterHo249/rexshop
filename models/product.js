@@ -35,5 +35,10 @@ var ProductSchema = new Schema({
     }
 });
 
+ProductSchema.virtual('url')
+    .get(function () {
+        return 'product/item/' + this._id;
+    });
+
 //Export model
 module.exports = mongoose.model('Product', ProductSchema);
