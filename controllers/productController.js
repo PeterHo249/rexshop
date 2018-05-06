@@ -4,9 +4,41 @@ let Product = require('../models/product');
 let async = require('async');
 
 exports.product_home = function (req, res) {
-    res.render('index', {
-        title: 'RexShop',
-        homepage: true
+    async.parallel({
+        new_items: function (callback) {
+            Product.find({
+                    'type': 'camera/dslr'
+                })
+                .exec(callback);
+        },
+        trend_items: function (callback) {
+            Product.find({
+                'type': 'camera/dslr'
+            })
+            .exec(callback);
+        }
+    }, function (err, results) {
+        if (err) {
+            return next(err);
+        }
+        if (results.new_items == null) {
+            let err = new Error('Product not found');
+            err.status = 404;
+            return next(err);
+        }
+        if (results.trend_items == null) {
+            let err = new Error('Product not found');
+            err.status = 404;
+            return next(err);
+        }
+        console.log(results.new_items);
+        // render
+        res.render('index', {
+            title: 'RexShop',
+            homepage: true,
+            new_items: results.trend_items,
+            trend_items: results.trend_items
+        });
     });
 };
 

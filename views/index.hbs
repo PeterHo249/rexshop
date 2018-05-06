@@ -1,3 +1,5 @@
+{{!Arguments: homepage trend_items new_items}}
+
 <!-- Banner -->
 
 <div class="banner">
@@ -77,6 +79,60 @@
                         <div class="char_title">Free Replacement</div>
                         <div class="char_subtitle">in 7 days</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recently Viewed -->
+
+<div class="viewed">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="viewed_title_container">
+                    <h3 class="viewed_title">New Product</h3>
+                    <div class="viewed_nav_container">
+                        <div class="viewed_nav viewed_prev">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="viewed_nav viewed_next">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viewed_slider_container">
+
+                    <!-- Recently Viewed Slider -->
+
+                    <div class="owl-carousel owl-theme viewed_slider">
+
+                        {{#each new_items}}
+                            <!-- Recently Viewed Item -->
+                            <div class="owl-item">
+                                <div class="viewed_item discount d-flex flex-column align-items-center justify-content-center text-center">
+                                    <div class="viewed_image">
+                                        <img src="/images/view_1.jpg" alt="">
+                                    </div>
+                                    <div class="viewed_content text-center">
+                                        <div class="viewed_price">
+                                            {{market_price}} vnd
+                                        </div>
+                                        <div class="viewed_name">
+                                            <a href="/item/{{_id}}">{{name}}</a>
+                                        </div>
+                                    </div>
+                                    <ul class="item_marks">
+                                        <li class="item_mark item_new">new</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {{/each}}
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -175,3 +231,63 @@
     </div>
 </div>
 
+<!-- Trends -->
+
+<div class="trends">
+    <div class="trends_background" style="background-image:url(/images/trends_background.jpg)"></div>
+    <div class="trends_overlay"></div>
+    <div class="container">
+        <div class="row">
+
+            <!-- Trends Content -->
+            <div class="col-lg-3">
+                <div class="trends_container">
+                    <h2 class="trends_title">Trends 2018</h2>
+                    <div class="trends_text">
+                        <p>This is best-selling product.</p>
+                    </div>
+                    <div class="trends_slider_nav">
+                        <div class="trends_prev trends_nav">
+                            <i class="fas fa-angle-left ml-auto"></i>
+                        </div>
+                        <div class="trends_next trends_nav">
+                            <i class="fas fa-angle-right ml-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trends Slider -->
+            <div class="col-lg-9">
+                <div class="trends_slider_container">
+
+                    <!-- Trends Slider -->
+
+                    <div class="owl-carousel owl-theme trends_slider">
+
+                        {{#each trend_items}}
+                            <!-- Trends Slider Item -->
+                            <div class="owl-item">
+                                <div class="trends_item is_new">
+                                    <div class="trends_image d-flex flex-column align-items-center justify-content-center">
+                                        <img src="/images/trends_1.jpg" alt="">
+                                    </div>
+                                    <div class="trends_content">
+                                        <div class="trends_info clearfix">
+                                            <div class="trends_name">
+                                                <a href="/item/{{_id}}">{{name}}</a>
+                                            </div>
+                                            <div class="trends_price">{{market_price}} vnd</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
