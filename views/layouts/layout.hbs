@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{title}}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="/plugins/fontawesome-free-5.0.1/css/fontawesome-all.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/animate.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.0/slick.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="/styles/main_styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/responsive.css">
+  <link rel="stylesheet" type="text/css" href="/styles/shop_styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/shop_responsive.css">
+  <link rel="stylesheet" type="text/css" href="/styles/product_styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/product_responsive.css">
+  <link rel="stylesheet" type="text/css" href="/styles/cart_styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/cart_responsive.css">
+</head>
+
+<body>
+  <div class="super_container">
+
+    {{#if manager}} 
+      {{> navbar_manager}} 
+    {{else}} 
+      {{#if salesman}} 
+        {{> navbar_salesman}}
+      {{else}} 
+        {{#if customer}} 
+          {{> navbar_guest}} 
+        {{else}} 
+          {{> navbar_default}} 
+        {{/if}} 
+      {{/if}} 
+    {{/if}}
+
+    {{{body}}} 
+  
+    {{> brand_slide}}
+
+    {{> footer}}
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="/plugins/greensock/TweenMax.min.js"></script>
+  <script src="/plugins/greensock/TimelineMax.min.js"></script>
+  <script src="/plugins/scrollmagic/ScrollMagic.min.js"></script>
+  <script src="/plugins/greensock/animation.gsap.min.js"></script>
+  <script src="/plugins/greensock/ScrollToPlugin.min.js"></script>
+  <script src="/plugins/easing/easing.js"></script>
+  <script src="/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+  <script src="/plugins/Isotope/isotope.pkgd.min.js"></script>
+  <script src="/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+  <script src="/plugins/parallax-js-master/parallax.min.js"></script>
+  <script src="/plugins/slick-1.8.0/slick.js"></script>
+  <script src="/js/cart_custom.js"></script>  
+  <script src="/js/shop_custom.js"></script>  
+  <script src="/js/product_custom.js"></script>  
+  <script src="/js/custom.js"></script>
+</body>
+
+</html>

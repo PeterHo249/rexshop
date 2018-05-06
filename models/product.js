@@ -30,10 +30,15 @@ var ProductSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ['camera/dslr', 'camera/mirrorless', 'camera/compact', 'camera/len', 'tripod', 'battery', 'card', 'backpack', 'camera/action'],
+        enum: ['camera/dslr', 'camera/mirrorless', 'camera/compact', 'camera/len', 'accessory/tripod', 'accessory/battery', 'accessory/card', 'accessory/backpack', 'camera/action'],
         required: true
     }
 });
+
+ProductSchema.virtual('url')
+    .get(function () {
+        return 'product/item/' + this._id;
+    });
 
 //Export model
 module.exports = mongoose.model('Product', ProductSchema);

@@ -136,10 +136,10 @@ function orderDetailCreate(order_id, product_id, amount, cb) {
 function createProducts(cb) {
     async.parallel([
         function (callback) {
-            productCreate('canon', 'camera mau den', 100, 150, 3, callback);
+            productCreate('canon', 'camera mau den', 100, 150, 3, 'Canon', 'camera/dslr', callback);
         },
         function (callback) {
-            productCreate('nikon', "camera chat luong cao", 100, 200, 5, callback);
+            productCreate('nikon', "camera chat luong cao", 100, 200, 5, 'Nikon', 'camera/compact', callback);
         }
     ], cb);
 }
@@ -175,7 +175,7 @@ function createAccounts(cb) {
 function createOrders(cb) {
     async.parallel([
         function (callback) {
-            orderCreate(users[0], users[2], 'out', '150', callback);
+            orderCreate(users[0], users[2], 'out', '150', null, 'Waiting', callback);
         }
     ], cb);
 }
