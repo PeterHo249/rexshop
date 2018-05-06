@@ -49,35 +49,38 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="sidebar_section filter_by_section">
-                        <div class="sidebar_title">Filter By</div>
-                    </div>
-                    <div class="sidebar_section">
-                        <div class="sidebar_subtitle brands_subtitle">Brands</div>
-                        <ul class="brands_list">
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/nikon">Nikon</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/canon">Canon</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/fujifilm">Fujifilm</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/pentax">Pentax</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/sony">Sony</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/gopro">GoPro</a>
-                            </li>
-                            <li class="brand">
-                                <a href="/product/cate/{{current_cate}}/brand/leica">Leica</a>
-                            </li>
-                        </ul>
-                    </div>
+
+                    {{#if is_filter}}
+                        <div class="sidebar_section filter_by_section">
+                            <div class="sidebar_title">Filter By</div>
+                        </div>
+                        <div class="sidebar_section">
+                            <div class="sidebar_subtitle brands_subtitle">Brands</div>
+                            <ul class="brands_list">
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/nikon">Nikon</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/canon">Canon</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/fujifilm">Fujifilm</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/pentax">Pentax</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/sony">Sony</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/gopro">GoPro</a>
+                                </li>
+                                <li class="brand">
+                                    <a href="/product/cate/{{current_cate}}/brand/leica">Leica</a>
+                                </li>
+                            </ul>
+                        </div>
+                    {{/if}}
                 </div>
 
             </div>
@@ -115,34 +118,6 @@
                             </div>
                         {{/each}}
 
-                    </div>
-
-                    <!-- Shop Page Navigation -->
-
-                    <div class="shop_page_nav d-flex flex-row">
-                        <div class="page_prev d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <ul class="page_nav d-flex flex-row">
-                            <li>
-                                <a href="#">1</a>
-                            </li>
-                            <li>
-                                <a href="#">2</a>
-                            </li>
-                            <li>
-                                <a href="#">3</a>
-                            </li>
-                            <li>
-                                <a href="#">...</a>
-                            </li>
-                            <li>
-                                <a href="#">21</a>
-                            </li>
-                        </ul>
-                        <div class="page_next d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
                     </div>
 
                 </div>

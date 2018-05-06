@@ -30,7 +30,7 @@ var ProductSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ['camera/dslr', 'camera/mirrorless', 'camera/compact', 'camera/len', 'tripod', 'battery', 'card', 'backpack', 'camera/action'],
+        enum: ['camera/dslr', 'camera/mirrorless', 'camera/compact', 'camera/len', 'accessory/tripod', 'accessory/battery', 'accessory/card', 'accessory/backpack', 'camera/action'],
         required: true
     }
 });

@@ -7,4 +7,8 @@ router.get('/', function(req, res, next) {
   res.redirect('/product');
 });
 
+router.get('/item/:id', function(req, res, next) {
+  res.redirect('/product/item/' + req.params.id);
+});
+
 module.exports = router;
