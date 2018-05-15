@@ -536,7 +536,7 @@ function createProducts(cb) {
             productCreate('Chân máy Benro IF28C', 'Chân máy Benro IF28C', 6000000, 6680000, 10, 'Benro', 'accessory/tripod', callback);
         },
         function(callback) {
-            productCreate('Chân máy Benro IF28C', 'Chân máy Benro IF28C', 3000000, 3480000, 10, 'Benro', 'accessory/tripod', callback);
+            productCreate('Chân máy Benro IF18C', 'Chân máy Benro IF18C', 3000000, 3480000, 10, 'Benro', 'accessory/tripod', callback);
         },
         function(callback) {
             productCreate('Chân máy Benro Mefoto A0350Q0', 'Chân máy Benro Mefoto A0350Q0', 2000000, 2290000, 10, 'Beike', 'accessory/tripod', callback);
