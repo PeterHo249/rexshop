@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var random_plugin = require('mongoose-simple-random');
 
 var Schema = mongoose.Schema;
 
@@ -34,6 +35,8 @@ var ProductSchema = new Schema({
         required: true
     }
 });
+
+ProductSchema.plugin(random_plugin);
 
 ProductSchema.virtual('url')
     .get(function () {
