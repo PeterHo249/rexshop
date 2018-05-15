@@ -217,7 +217,7 @@ function createProducts(cb) {
             productCreate('Fujifilm X-E2S', 'Fujifilm X-E2S', 14990000, 14990000, 10, 'Fujifilm', 'camera/dslr', callback);
         },
         function(callback) {
-            productCreate('Fujifilm X-E3', 'Fujifilm X-E3', 20490000, 20490000, 10, 'Fujifilm', 'camera/dslr', callback);
+            productCreate('Fujifilm XT20', 'Fujifilm XT20', 20490000, 20490000, 10, 'Fujifilm', 'camera/dslr', callback);
         },
         function(callback) {
             productCreate('Fujifilm X-A5 ', 'Fujifilm X-A5 ', 14380000, 14380000, 10, 'Fujifilm', 'camera/dslr', callback);
