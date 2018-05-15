@@ -3,19 +3,14 @@ let Product = require('../models/product');
 
 let async = require('async');
 
+// MARK - Need some test in this
 exports.product_home = function (req, res) {
     async.parallel({
         new_items: function (callback) {
-            Product.find({
-                    'type': 'camera/dslr'
-                })
-                .exec(callback);
+            Product.findRandom({}, {}, {limit: 6}, callback);
         },
         trend_items: function (callback) {
-            Product.find({
-                'type': 'camera/dslr'
-            })
-            .exec(callback);
+            Product.findRandom({}, {}, {limit: 6}, callback);
         }
     }, function (err, results) {
         if (err) {
@@ -36,7 +31,7 @@ exports.product_home = function (req, res) {
         res.render('index', {
             title: 'RexShop',
             homepage: true,
-            new_items: results.trend_items,
+            new_items: results.new_items,
             trend_items: results.trend_items
         });
     });
