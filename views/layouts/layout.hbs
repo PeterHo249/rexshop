@@ -13,14 +13,26 @@
   <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/animate.css">
   <link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.0/slick.css">
   <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
+
+  {{#if homepage}}
   <link rel="stylesheet" type="text/css" href="/styles/main_styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/responsive.css">
+  {{/if}}
+
+  {{#if shop_page}}
   <link rel="stylesheet" type="text/css" href="/styles/shop_styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/shop_responsive.css">
+  {{/if}}
+
+  {{#if product_page}}
   <link rel="stylesheet" type="text/css" href="/styles/product_styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/product_responsive.css">
+  {{/if}}
+
+  {{#if cart_page}}
   <link rel="stylesheet" type="text/css" href="/styles/cart_styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/cart_responsive.css">
+  {{/if}}
 </head>
 
 <body>
@@ -48,8 +60,7 @@
 
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/plugins/greensock/TweenMax.min.js"></script>
   <script src="/plugins/greensock/TimelineMax.min.js"></script>
@@ -62,10 +73,23 @@
   <script src="/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
   <script src="/plugins/parallax-js-master/parallax.min.js"></script>
   <script src="/plugins/slick-1.8.0/slick.js"></script>
-  <script src="/js/cart_custom.js"></script>  
-  <script src="/js/shop_custom.js"></script>  
-  <script src="/js/product_custom.js"></script>  
+  
+  {{#if homepage}}
   <script src="/js/custom.js"></script>
+  {{/if}}
+
+  {{#if cart_page}}
+  <script src="/js/cart_custom.js"></script> 
+  {{/if}} 
+
+  {{#if shop_page}}
+  <script src="/js/shop_custom.js"></script> 
+  {{/if}} 
+
+  {{#if product_page}}
+  <script src="/js/product_custom.js"></script>
+  {{/if}}  
+  
 </body>
 
 </html>
