@@ -464,7 +464,7 @@ function createProducts(cb) {
             productCreate('Leica Summilux-M 50mm F/1.4 ASPH', 'Leica Noctilux-M 50mm F/0.95 ASPH', 77000000, 79000000, 10, 'Leica', 'camera/len', callback);
         },
         function(callback) {
-            productCreate('Leica Telephoto 90mm F/2.0 APO ', 'Leica Telephoto 90mm F/2.0 APO ', 74000000, 000000, 10, 'Leica', 'camera/len', callback);
+            productCreate('Leica Telephoto 90mm F/2.0 APO ', 'Leica Telephoto 90mm F/2.0 APO ', 74000000, 75000000, 10, 'Leica', 'camera/len', callback);
         },
         function(callback) {
             productCreate('Leica APO-Summicron-M 50mm F/2 ASPH', 'Leica APO-Summicron-M 50mm F/2 ASPH', 165000000, 169000000, 10, 'Leica', 'camera/len', callback);
