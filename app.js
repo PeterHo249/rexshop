@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressHbs = require('express-handlebars');
+var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -30,6 +31,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Passport config
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({secret: 'secretkey'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Config flash
+var flash = require('connect-flash');
+app.use(flash());
+
+// Init passport
+var initPassport = require('./passport/init');
+initPassport(passport);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
