@@ -9,13 +9,38 @@
     </div>
     <form action="/signup" method="post">
         <ul>
+            {{#if error-message}}
             <li>
-                <input type="text" class="text" name="username" value="Email Address" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email Address';}">
-                <a href="#" class=" icon user"></a>
+                <p class="error-message">{{error-message}}</p>
+            </li>
+            {{/if}}
+            <li>
+                <input type="text" class="text" name="fullname" value="Fullname" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Fullname';}">
+                <div class=" icon name"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="username" value="Username" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Username';}">
+                <div class=" icon user"></div>
             </li>
             <li>
                 <input type="password" name="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
-                <a href="#" class=" icon lock"></a>
+                <div class=" icon lock"></div>
+            </li>
+            <li>
+                <input type="password" name="repassword" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
+                <div class=" icon lock"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="email" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}">
+                <div class=" icon mail"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="address" value="Address" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Address';}">
+                <div class=" icon address"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="phoneno" value="Phone Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Phone Number';}">
+                <div class=" icon phone"></div>
             </li>
         </ul>
         <div class="submit">

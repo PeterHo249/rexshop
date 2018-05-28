@@ -9,6 +9,11 @@
     </div>
     <form action="/login" method="post">
         <ul>
+            {{#if error-message}}
+            <li>
+                <p class="error-message">{{error-message}}</p>
+            </li>
+            {{/if}}
             <li>
                 <input type="text" class="text" name="username" value="Email Address" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email Address';}">
                 <a href="#" class=" icon user"></a>
