@@ -13,31 +13,44 @@ module.exports = function (app, passport) {
 
   app.get('/login', function (req, res, next) {
     res.render('login', {
-      login_page: true
+      login_page: true,
+      message: req.flash('loginMessage')
     });
   });
 
   app.get('/signup', function (req, res, next) {
     res.render('signup', {
-      login_page: true
+      login_page: true,
+      message: req.flash('signupMessage')
     });
   });
 
   app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
-  }));
+  }), function(req, res, next) {
+    switch (req.user.role) {
+      case 'customer':
+        res.redirect('/');
+        break;
+      case 'salesman':
+        res.redirect('/salesman');
+        break;
+      case 'manager':
+        res.redirect('/manager');
+        break;
+    }
+  });
 
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/login',
+    successRedirect: '/',
     failureRedirect: '/signup',
     failureFlash: true
   }));
 
   app.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/login');
+    res.redirect('/');
   });
 };
 

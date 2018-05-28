@@ -28,12 +28,24 @@ exports.product_home = function (req, res) {
         }
         console.log(results.new_items);
         // render
-        res.render('index', {
-            title: 'RexShop',
-            homepage: true,
-            new_items: results.new_items,
-            trend_items: results.trend_items
-        });
+        if (req.user) {
+            res.render('index', {
+                title: 'RexShop',
+                homepage: true,
+                customer: true,
+                user: req.user,
+                new_items: results.new_items,
+                trend_items: results.trend_items
+            });
+        } else {
+            res.render('index', {
+                title: 'RexShop',
+                homepage: true,
+                new_items: results.new_items,
+                trend_items: results.trend_items
+            });
+        }
+        
     });
 };
 
