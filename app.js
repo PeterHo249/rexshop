@@ -7,10 +7,6 @@ var logger = require('morgan');
 var expressHbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var productRouter = require('./routes/product');
-
 var app = express();
 
 
@@ -34,8 +30,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport config
 var passport = require('passport');
+require('./config/passport')(passport);
 var expressSession = require('express-session');
-app.use(expressSession({secret: 'secretkey'}));
+app.use(expressSession({
+  secret: 'mysecretkey',
+  resave: false,
+  saveUninitialized: true
+  }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -43,11 +44,11 @@ app.use(passport.session());
 var flash = require('connect-flash');
 app.use(flash());
 
-// Init passport
-var initPassport = require('./passport/init');
-initPassport(passport);
+require('./routes/index')(app, passport);
+var usersRouter = require('./routes/users');
+var productRouter = require('./routes/product');
 
-app.use('/', indexRouter);
+
 app.use('/users', usersRouter);
 app.use('/product', productRouter);
 
