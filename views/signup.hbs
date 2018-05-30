@@ -9,9 +9,9 @@
     </div>
     <form action="/signup" method="post">
         <ul>
-            {{#if error-message}}
-            <li>
-                <p class="error-message">{{error-message}}</p>
+            {{#if error_message}}
+            <li class="error-message">
+                <p>{{{error_message}}}</p>
             </li>
             {{/if}}
             <li>
@@ -42,9 +42,12 @@
                 <input type="text" class="text" name="phoneno" placeholder="Phone Number">
                 <div class=" icon phone"></div>
             </li>
+            <li class="info-string">
+                <p>* All field is required!</p>
+            </li>
         </ul>
         <div class="submit">
-            <input type="submit" value="Log in">
+            <input type="submit" value="Sign Up">
         </div>
     </form>
 

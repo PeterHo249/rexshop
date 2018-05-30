@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressHbs = require('express-handlebars');
 var bodyParser = require('body-parser');
+var validator = require('express-validator');
+var mailer = require('express-mailer');
 
 var app = express();
 
@@ -26,6 +28,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(validator({
+  customValidators: {
+    isEqual: (value1, value2) => {
+      return value1 === value2;
+    }
+  }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport config
@@ -43,6 +53,19 @@ app.use(passport.session());
 // Config flash
 var flash = require('connect-flash');
 app.use(flash());
+
+// Config mailer
+mailer.extend(app, {
+  from: 'no-reply@rexshop.com',
+  host: 'smtp.gmail.com',
+  secureConnection: true,
+  port: 465,
+  transportMethod: 'SMTP',
+  auth: {
+    user: 'peterho951357@gmail.com',
+    pass: 'thanchetpro123'
+  }
+});
 
 require('./routes/index')(app, passport);
 var usersRouter = require('./routes/users');

@@ -1,9 +1,9 @@
 /* jshint esversion: 6 */
+let User = require('../models/user');
 
 module.exports = function (app, passport) {
   /* GET home page. */
   app.get('/', function (req, res, next) {
-    //res.render('index', { title: 'Express' });
     res.redirect('/product');
   });
 
@@ -14,14 +14,14 @@ module.exports = function (app, passport) {
   app.get('/login', function (req, res, next) {
     res.render('login', {
       login_page: true,
-      message: req.flash('loginMessage')
+      error_message: req.flash('loginMessage')
     });
   });
 
   app.get('/signup', function (req, res, next) {
     res.render('signup', {
       login_page: true,
-      message: req.flash('signupMessage')
+      error_message: req.flash('signupMessage')
     });
   });
 
@@ -43,7 +43,7 @@ module.exports = function (app, passport) {
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/',
+    successRedirect: '/verify',
     failureRedirect: '/signup',
     failureFlash: true
   }));
@@ -51,6 +51,41 @@ module.exports = function (app, passport) {
   app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
+  });
+
+  app.get('/verify', function(req, res) {
+    let mailOptions = {
+      to: req.user.email,
+      subject: 'Verification Email',
+      user: {
+        code: req.user.code
+      }
+    };
+    app.mailer.send('email', mailOptions, function(err, message) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Email sent');
+      }
+    });
+    res.render('verify', {
+      login_page: true,
+      user: req.user
+    });
+  });
+
+  app.post('/verify', function(req, res) {
+    if (req.user.code === req.body.code) {
+      User.findByIdAndUpdate(req.user._id, {$set: {verified: true}}, {new: false}, function(err, user) {
+        if (err) {
+          return handleError(err);
+        }
+        console.log('verified successful!');
+      });
+      res.redirect('/');
+    } else {
+      res.redirect('/verify');
+    }
   });
 };
 

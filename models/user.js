@@ -6,22 +6,22 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
     name: {
         type: String,
-        //required: true,
+        required: true,
         maxlength: 100
     },
     address: {
         type: String,
-        //required: true
+        required: true
     },
     phone_number: {
         type: String,
-        //required: true,
+        required: true,
         maxlength: 11 
     },
     role: {
         type: String,
         enum: ['customer', 'salesman', 'manager'],
-        //required: true,
+        required: true,
         default: 'customer'
     },
     username: {
@@ -32,6 +32,18 @@ var UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    verified: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    code: {
+        type: String
     }
 });
 
