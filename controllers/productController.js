@@ -7,10 +7,14 @@ let async = require('async');
 exports.product_home = function (req, res) {
     async.parallel({
         new_items: function (callback) {
-            Product.findRandom({}, {}, {limit: 6}, callback);
+            Product.findRandom({}, {}, {
+                limit: 6
+            }, callback);
         },
         trend_items: function (callback) {
-            Product.findRandom({}, {}, {limit: 6}, callback);
+            Product.findRandom({}, {}, {
+                limit: 6
+            }, callback);
         }
     }, function (err, results) {
         if (err) {
@@ -45,7 +49,7 @@ exports.product_home = function (req, res) {
                 trend_items: results.trend_items
             });
         }
-        
+
     });
 };
 
@@ -123,15 +127,29 @@ exports.product_category_get = function (req, res) {
         }
 
         // render
-        res.render('product_list', {
-            title: 'RexShop',
-            category_title: category_title,
-            current_cate: req.params.category,
-            product_count: results.products.length,
-            product_items: results.products,
-            is_filter: isFilter,
-            shop_page: true
-        });
+        if (req.user) {
+            res.render('product_list', {
+                title: 'RexShop',
+                category_title: category_title,
+                current_cate: req.params.category,
+                product_count: results.products.length,
+                product_items: results.products,
+                is_filter: isFilter,
+                shop_page: true,
+                customer: true,
+                user: req.user
+            });
+        } else {
+            res.render('product_list', {
+                title: 'RexShop',
+                category_title: category_title,
+                current_cate: req.params.category,
+                product_count: results.products.length,
+                product_items: results.products,
+                is_filter: isFilter,
+                shop_page: true
+            });
+        }
     });
 };
 
@@ -238,15 +256,29 @@ exports.product_brand_get = function (req, res) {
         }
 
         // render
-        res.render('product_list', {
-            title: 'RexShop',
-            category_title: category_title,
-            current_cate: req.params.category,
-            product_count: results.products.length,
-            product_items: results.products,
-            is_filter: isFilter,
-            shop_page: true
-        });
+        if (req.user) {
+            res.render('product_list', {
+                title: 'RexShop',
+                category_title: category_title,
+                current_cate: req.params.category,
+                product_count: results.products.length,
+                product_items: results.products,
+                is_filter: isFilter,
+                shop_page: true,
+                customer: true,
+                user: req.user
+            });
+        } else {
+            res.render('product_list', {
+                title: 'RexShop',
+                category_title: category_title,
+                current_cate: req.params.category,
+                product_count: results.products.length,
+                product_items: results.products,
+                is_filter: isFilter,
+                shop_page: true
+            });
+        }
     });
 };
 
@@ -298,11 +330,22 @@ exports.product_detail_get = function (req, res) {
         }
 
         // render
-        res.render('single_product', {
-            title: 'RexShop',
-            category_name: category_name,
-            item: results.product,
-            product_page: true
-        });
+        if (req.user) {
+            res.render('single_product', {
+                title: 'RexShop',
+                category_name: category_name,
+                item: results.product,
+                product_page: true,
+                customer: true,
+                user: req.user
+            });
+        } else {
+            res.render('single_product', {
+                title: 'RexShop',
+                category_name: category_name,
+                item: results.product,
+                product_page: true
+            });
+        }
     });
 };

@@ -28,17 +28,21 @@ module.exports = function (app, passport) {
   app.post('/login', passport.authenticate('local-login', {
     failureRedirect: '/login',
     failureFlash: true
-  }), function(req, res, next) {
-    switch (req.user.role) {
-      case 'customer':
-        res.redirect('/');
-        break;
-      case 'salesman':
-        res.redirect('/salesman');
-        break;
-      case 'manager':
-        res.redirect('/manager');
-        break;
+  }), function (req, res, next) {
+    if (!req.user.verified) {
+      res.redirect('/verify');
+    } else {
+      switch (req.user.role) {
+        case 'customer':
+          res.redirect('/');
+          break;
+        case 'salesman':
+          res.redirect('/salesman');
+          break;
+        case 'manager':
+          res.redirect('/manager');
+          break;
+      }
     }
   });
 
@@ -48,20 +52,21 @@ module.exports = function (app, passport) {
     failureFlash: true
   }));
 
-  app.get('/logout', function(req, res) {
+  app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
   });
 
-  app.get('/verify', function(req, res) {
+  app.get('/verify', function (req, res) {
     let mailOptions = {
       to: req.user.email,
       subject: 'Verification Email',
       user: {
         code: req.user.code
-      }
+      },
+      email: true
     };
-    app.mailer.send('email', mailOptions, function(err, message) {
+    app.mailer.send('email', mailOptions, function (err, message) {
       if (err) {
         console.log(err);
       } else {
@@ -74,9 +79,15 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/verify', function(req, res) {
+  app.post('/verify', function (req, res) {
     if (req.user.code === req.body.code) {
-      User.findByIdAndUpdate(req.user._id, {$set: {verified: true}}, {new: false}, function(err, user) {
+      User.findByIdAndUpdate(req.user._id, {
+        $set: {
+          verified: true
+        }
+      }, {
+        new: false
+      }, function (err, user) {
         if (err) {
           return handleError(err);
         }
