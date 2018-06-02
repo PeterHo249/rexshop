@@ -59,7 +59,9 @@
 
                             <div class="product_price">{{item.market_price}} vnd</div>
                             <div class="button_container">
-                                <button type="button" class="button cart_button">Add to Cart</button>
+                                <form action="/product/cart/add/{{item._id}}" method="post">
+                                    <button type="submit" class="button cart_button">Add to Cart</button>
+                                </form>
                             </div>
 
                         </form>

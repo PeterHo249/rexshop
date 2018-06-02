@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 let User = require('../models/user');
+let auth = require('../config/auth');
 
 module.exports = function (app, passport) {
   /* GET home page. */
@@ -98,12 +99,10 @@ module.exports = function (app, passport) {
       res.redirect('/verify');
     }
   });
+
+  app.get('/cart/:id', function(req, res) {
+
+  });
+
+  
 };
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.redirect('/login');
-}

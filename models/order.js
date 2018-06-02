@@ -5,19 +5,11 @@ var Schema = mongoose.Schema;
 var OrderSchema = new Schema({
     staff_id: {
         type: Schema.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
     },
     customer_id: {
         type: Schema.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    order_type: {
-        type: String,
-        enum: ['in', 'out'],
-        required: true,
-        default: 'out'
+        ref: 'User'
     },
     cost: {
         type: Number,
@@ -25,13 +17,23 @@ var OrderSchema = new Schema({
         required: true
     },
     date: {
-        type: Date
+        type: Date,
+        required: true
     },
     status: {
         type: String,
         enum: ['Done', 'Processing', 'Waiting'],
         required: true,
         default: 'Waiting'
+    },
+    shopping: {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    count: {
+        type: Number,
+        default: 0
     }
 });
 

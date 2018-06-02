@@ -1,23 +1,25 @@
 /* jshint esversion: 6 */
 let express = require('express');
 let router = express.Router();
+let auth = require('../config/auth');
 
 // Require controller module
 var product_controller = require('../controllers/productController');
 
+module.exports = function (app, passport) {
+    /// PRODUCT ROUTE ///
 
-/// PRODUCT ROUTE ///
+    // GET homepage
+    app.get('/product', product_controller.product_home);
 
-// GET homepage
-router.get('/', product_controller.product_home);
+    // GET product catagories
+    app.get('/product/cate/:category', product_controller.product_category_get);
 
-// GET product catagories
-router.get('/cate/:category', product_controller.product_category_get);
+    // GET product category and brand
+    app.get('/product/cate/:category/brand/:brand', product_controller.product_brand_get);
 
-// GET product category and brand
-router.get('/cate/:category/brand/:brand', product_controller.product_brand_get); 
+    // GET product detail
+    app.get('/product/item/:id', product_controller.product_detail_get);
 
-// GET product detail
-router.get('/item/:id', product_controller.product_detail_get);
-
-module.exports = router;
+    app.post('/product/cart/add/:id', auth.isLoggedIn, product_controller.add_item_cart);
+};

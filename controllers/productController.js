@@ -349,3 +349,7 @@ exports.product_detail_get = function (req, res) {
         }
     });
 };
+
+exports.add_item_cart = function(req, res) {
+    
+};

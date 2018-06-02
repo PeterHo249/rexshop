@@ -68,12 +68,8 @@ mailer.extend(app, {
 });
 
 require('./routes/index')(app, passport);
-var usersRouter = require('./routes/users');
-var productRouter = require('./routes/product');
-
-
-app.use('/users', usersRouter);
-app.use('/product', productRouter);
+require('./routes/product')(app, passport);
+require('./routes/user')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
