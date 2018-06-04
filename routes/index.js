@@ -1,6 +1,9 @@
 /* jshint esversion: 6 */
 let User = require('../models/user');
 let auth = require('../config/auth');
+let async = require('async');
+let crypto = require('crypto');
+let bcrypt = require('bcrypt-nodejs');
 
 module.exports = function (app, passport) {
   /* GET home page. */
@@ -67,7 +70,7 @@ module.exports = function (app, passport) {
       },
       email: true
     };
-    app.mailer.send('email', mailOptions, function (err, message) {
+    app.mailer.send('emailverify', mailOptions, function (err, message) {
       if (err) {
         console.log(err);
       } else {
@@ -98,6 +101,119 @@ module.exports = function (app, passport) {
     } else {
       res.redirect('/verify');
     }
+  });
+
+  app.get('/forgot', function(req, res) {
+    res.render('forgot', {
+      login_page: true,
+      error_message: req.flash('forgotMessage')
+    });
+  });
+
+  app.post('/forgot', function(req, res, next) {
+    async.waterfall([
+      function(done) {
+        crypto.randomBytes(20, function(err, buf) {
+          let token = buf.toString('hex');
+          done(err, token);
+        });
+      },
+      function(token, done) {
+        User.findOne({ username: req.body.username }, function(err, user) {
+          if (!user) {
+            req.flash('forgotMessage', 'No account with that username exist.');
+            return res.redirect('/login');
+          }
+
+          user.resetPasswordToken = token;
+          user.resetPasswordExpires = Date.now() + 3600000;
+
+          user.save(function(err) {
+            done(err, token, user);
+          });
+        });
+      },
+      function(token, user, done) {
+        let mailOptions = {
+          to: user.email,
+          subject: 'Reset Password Email',
+          host: req.headers.host,
+          token: token,
+          email: true
+        };
+        app.mailer.send('emailforgot', mailOptions, function (err, message) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Email sent');
+            req.flash('forgotMessage', 'An email was sent to your email.');
+            res.redirect('back');
+          }
+        });
+      }
+    ],
+    function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/forgot');
+    });
+  });
+
+  app.get('/reset/:token', function(req, res) {
+    User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user) {
+      if (!user) {
+        req.flash('forgotMessage', 'Password reset token is invalid or has expired.');
+        return res.redirect('/forgot');
+      }
+
+      res.render('reset', {
+        user: req.user,
+        login_page: true,
+        token: req.params.token,
+        error_message: req.flash('resetMessage')
+      });
+    });
+  });
+
+  app.post('/reset/:token', function(req, res) {
+    async.waterfall([
+      function(done) {
+        User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires:{$gt: Date.now()}}, function(err, user) {
+          if (!user) {
+            req.flash('resetMessage', 'Password reset token is invalid or has expired.');
+            return res.redirect('back');
+          }
+
+          user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+          user.resetPasswordToken = undefined;
+          user.resetPasswordExpires = undefined;
+
+          user.save(function(err) {
+            req.logIn(user, function(err) {
+              done(err, user);
+            });
+          });
+        });
+      },
+      function(user, done) {
+        let mailOptions = {
+          to: user.email,
+          subject: 'Confirmation Reset Password Email',
+          email: true
+        };
+        app.mailer.send('emailreset', mailOptions, function (err, message) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Email sent');
+          }
+        });
+      }
+    ],
+    function(err) {
+      res.redirect('/');
+    });
   });
 
   app.get('/cart/:id', function(req, res) {

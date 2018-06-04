@@ -2,35 +2,32 @@
 <div class="login">
     <div class="ribbon-wrapper h2 ribbon-red">
         <div class="ribbon-front">
-            <h2>Change</h2>
+            <h2>Reset</h2>
         </div>
         <div class="ribbon-edge-topleft2"></div>
         <div class="ribbon-edge-bottomleft"></div>
     </div>
-    <form action="/changepassword" method="post">
+    <form action="/reset/{{token}}" method="post">
         <ul>
             {{#if error_message}}
             <li>
                 <p class="error-message">{{error_message}}</p>
             </li>
-            {{/if}}<li class="info-string">
-                <p>Please complete all field to change your password!</p>
+            {{/if}}
+            <li class="info-string">
+                <p>Please enter new password for your account.</p>
             </li>
             <li>
-                <input type="password" name="currentpass" placeholder="Enter your current password.">
+                <input type="password" name="password" placeholder="New password">
                 <div class=" icon lock"></div>
             </li>
             <li>
-                <input type="password" name="newpass" placeholder="Enter your new password.">
-                <div class=" icon lock"></div>
-            </li>
-            <li>
-                <input type="password" name="renewpass" placeholder="Re-enter your new password.">
+                <input type="password" name="repassword" placeholder="Confirm Password">
                 <div class=" icon lock"></div>
             </li>
         </ul>
         <div class="submit">
-            <input type="submit" value="Change Password">
+            <input type="submit" value="Reset">
         </div>
     </form>
 

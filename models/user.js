@@ -44,7 +44,9 @@ var UserSchema = new Schema({
     },
     code: {
         type: String
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 UserSchema.methods.generateHash = function(password) {
