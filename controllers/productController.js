@@ -30,7 +30,6 @@ exports.product_home = function (req, res) {
             err.status = 404;
             return next(err);
         }
-        console.log(results.new_items);
         // render
         if (req.user) {
             res.render('index', {

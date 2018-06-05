@@ -61,7 +61,7 @@ module.exports = function (app, passport) {
     res.redirect('/');
   });
 
-  app.get('/verify', function (req, res) {
+  app.get('/verify', auth.isLoggedIn, function (req, res) {
     let mailOptions = {
       to: req.user.email,
       subject: 'Verification Email',
@@ -83,7 +83,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/verify', function (req, res) {
+  app.post('/verify', auth.isLoggedIn, function (req, res) {
     if (req.user.code === req.body.code) {
       User.findByIdAndUpdate(req.user._id, {
         $set: {
@@ -160,7 +160,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/reset/:token', function(req, res) {
+  app.get('/reset/:token', auth.isLoggedIn, function(req, res) {
     User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function(err, user) {
       if (!user) {
         req.flash('forgotMessage', 'Password reset token is invalid or has expired.');
@@ -176,9 +176,25 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/reset/:token', function(req, res) {
+  app.post('/reset/:token', auth.isLoggedIn, function(req, res) {
     async.waterfall([
       function(done) {
+        let errors = [];
+        if (req.body.password === undefined || req.body.password.length == 0) {
+          errors.push('New password is required.');
+        }
+        if (req.body.password !== req.body.repassword) {
+          errors.push('New password and re-enter password have to be the same.');
+        }
+        if (errors.length !== 0) {
+          let message = '';
+          errors.forEach(error => {
+            message = message + error + '<br>';
+          });
+          req.flash('resetMessage', message);
+          return res.redirect('back');
+        }
+        
         User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires:{$gt: Date.now()}}, function(err, user) {
           if (!user) {
             req.flash('resetMessage', 'Password reset token is invalid or has expired.');
