@@ -5,10 +5,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressHbs = require('express-handlebars');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var productRouter = require('./routes/product');
+var bodyParser = require('body-parser');
+var validator = require('express-validator');
+var mailer = require('express-mailer');
 
 var app = express();
 
@@ -29,11 +28,48 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(validator({
+  customValidators: {
+    isEqual: (value1, value2) => {
+      return value1 === value2;
+    }
+  }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/product', productRouter);
+// Passport config
+var passport = require('passport');
+require('./config/passport')(passport);
+var expressSession = require('express-session');
+app.use(expressSession({
+  secret: 'mysecretkey',
+  resave: false,
+  saveUninitialized: true
+  }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Config flash
+var flash = require('connect-flash');
+app.use(flash());
+
+// Config mailer
+mailer.extend(app, {
+  from: 'no-reply@rexshop.com',
+  host: 'smtp.gmail.com',
+  secureConnection: true,
+  port: 465,
+  transportMethod: 'SMTP',
+  auth: {
+    user: 'peterho951357@gmail.com',
+    pass: 'thanchetpro123'
+  }
+});
+
+require('./routes/index')(app, passport);
+require('./routes/product')(app, passport);
+require('./routes/user')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

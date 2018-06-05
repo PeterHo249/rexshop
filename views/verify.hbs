@@ -1,0 +1,27 @@
+<a href="/">
+    <h1>RexShop</h1>
+</a>
+<div class="login">
+    <div class="ribbon-wrapper h2 ribbon-red">
+        <div class="ribbon-front">
+            <h2>Verify Account</h2>
+        </div>
+        <div class="ribbon-edge-topleft2"></div>
+        <div class="ribbon-edge-bottomleft"></div>
+    </div>
+    <form action="/verify" method="post">
+        <ul>
+            <li class="info-string">
+                <p>If {{user.email}} is valid, an email will be sent to you. Please enter the code in that email to verify your account.</p>
+            </li>
+            <li>
+                <input type="text" class="text" name="code" placeholder="Enter your code to verify">
+                <div class=" icon lock"></div>
+            </li>
+        </ul>
+        <div class="submit">
+            <input type="submit" value="Verify">
+        </div>
+    </form>
+
+</div>

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
 
 var Schema = mongoose.Schema;
 
@@ -22,8 +23,39 @@ var UserSchema = new Schema({
         enum: ['customer', 'salesman', 'manager'],
         required: true,
         default: 'customer'
-    }
+    },
+    username: {
+        type: String,
+        required: true,
+        maxlength: 20
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    verified: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    code: {
+        type: String
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
+
+UserSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+UserSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 //Export model
 module.exports = mongoose.model('User', UserSchema);

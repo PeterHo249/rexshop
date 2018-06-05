@@ -1,0 +1,44 @@
+<a href="/">
+    <h1>RexShop</h1>
+</a>
+<div class="login">
+    <div class="ribbon-wrapper h2 ribbon-red">
+        <div class="ribbon-front">
+            <h2>Modify Profile</h2>
+        </div>
+        <div class="ribbon-edge-topleft2"></div>
+        <div class="ribbon-edge-bottomleft"></div>
+    </div>
+    <form action="/changeprofile" method="post">
+        <ul>
+            {{#if error_message}}
+            <li class="info-string error-message">
+                <p>{{{error_message}}}</p>
+            </li>
+            {{/if}}
+            <li>
+                <input type="text" class="text" name="fullname" placeholder="Fullname" value="{{user.name}}">
+                <div class=" icon name"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="email" placeholder="Email" value="{{user.email}}">
+                <div class=" icon mail"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="address" placeholder="Address" value="{{user.address}}">
+                <div class=" icon address"></div>
+            </li>
+            <li>
+                <input type="text" class="text" name="phoneno" placeholder="Phone Number" value="{{user.phone_number}}">
+                <div class=" icon phone"></div>
+            </li>
+            <li class="info-string">
+                <p>* All field is required!</p>
+            </li>
+        </ul>
+        <div class="submit">
+            <input type="submit" value="Save">
+        </div>
+    </form>
+
+</div>

@@ -1,3 +1,21 @@
+{{#if email}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Verification</title>
+</head>
+<body>
+  <div>
+    {{{body}}}
+  </div>
+</body>
+</html>
+
+{{else}}
+
 <!DOCTYPE html>
 <html>
 
@@ -6,6 +24,12 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {{#if login_page}}
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
+  <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+  <link rel="stylesheet" type="text/css" href="/styles/login.css">
+  {{else}}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="/plugins/fontawesome-free-5.0.1/css/fontawesome-all.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
@@ -33,30 +57,39 @@
   <link rel="stylesheet" type="text/css" href="/styles/cart_styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/cart_responsive.css">
   {{/if}}
+  {{/if}}
 </head>
 
 <body>
   <div class="super_container">
 
-    {{#if manager}} 
-      {{> navbar_manager}} 
-    {{else}} 
-      {{#if salesman}} 
-        {{> navbar_salesman}}
+    {{#if login_page}}
+    {{else}}
+      {{#if manager}} 
+        {{> navbar_manager}} 
       {{else}} 
-        {{#if customer}} 
-          {{> navbar_guest}} 
+        {{#if salesman}} 
+          {{> navbar_salesman}}
         {{else}} 
-          {{> navbar_default}} 
+          {{#if customer}} 
+            {{> navbar_guest}} 
+          {{else}} 
+            {{> navbar_default}} 
+          {{/if}} 
         {{/if}} 
-      {{/if}} 
+      {{/if}}
     {{/if}}
 
-    {{{body}}} 
-  
-    {{> brand_slide}}
+    {{{body}}}     
 
-    {{> footer}}
+    {{#if login_page}}
+    {{else}}
+      {{#if cart_page}}
+      {{else}}
+        {{> brand_slide}}
+      {{/if}}
+      {{> footer}}
+    {{/if}}
 
   </div>
 
@@ -93,3 +126,5 @@
 </body>
 
 </html>
+
+{{/if}}

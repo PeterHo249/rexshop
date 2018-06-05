@@ -1,0 +1,37 @@
+<a href="/">
+    <h1>RexShop</h1>
+</a>
+<div class="login">
+    <div class="ribbon-wrapper h2 ribbon-red">
+        <div class="ribbon-front">
+            <h2>User Login</h2>
+        </div>
+        <div class="ribbon-edge-topleft2"></div>
+        <div class="ribbon-edge-bottomleft"></div>
+    </div>
+    <form action="/login" method="post">
+        <ul>
+            {{#if error_message}}
+            <li class="info-string">
+                <p class="error-message">{{{error_message}}}</p>
+            </li>
+            {{/if}}
+            <li>
+                <input type="text" class="text" name="username" placeholder="Username">
+                <div class=" icon user"></div>
+            </li>
+            <li>
+                <input type="password" name="password" placeholder="Password">
+                <div class=" icon lock"></div>
+            </li>
+            <li class="info-string">
+                <p>No account, <a href="/signup">create one!</a></p>
+                <p>Forgot password, <a href="/forgot">reset it!</a></p>
+            </li>
+        </ul>
+        <div class="submit">
+            <input type="submit" value="Log in">
+        </div>
+    </form>
+
+</div>
