@@ -93,9 +93,18 @@ module.exports = function (app, passport) {
         new: false
       }, function (err, user) {
         if (err) {
-          return handleError(err);
+          console.log(err);
+          return;
+        } else {
+          req.login(user, function(err) {
+            if (err) {
+              console.log(err);
+              return;
+            } else {
+              console.log('verified successful!');
+            }
+          });
         }
-        console.log('verified successful!');
       });
       res.redirect('/');
     } else {

@@ -9,8 +9,12 @@ const { check, validationResult } = require('express-validator/check');
 
 module.exports = function (app, passport) {
   /* GET users listing. */
-  app.get('/user', auth.isLoggedIn, function (req, res, next) {
-    res.send('user info: ' + req.user);
+  app.get('/profile', auth.isLoggedIn, function (req, res, next) {
+    res.render('profile', {
+      user: req.user,
+      cart_page: true,
+      customer: true
+    });
   });
 
   app.get('/changepassword', auth.isLoggedIn, function (req, res) {
@@ -75,6 +79,56 @@ module.exports = function (app, passport) {
     function(err) {
       console.log('redirecting...');
       res.redirect('/');
+    });
+  });
+
+  app.get('/changeprofile', auth.isLoggedIn, function(req, res) {
+    res.render('changeprofile', {
+      login_page: true,
+      error_message: req.flash('changeProfileMessage'),
+      user: req.user
+    });
+  });
+
+  app.post('/changeprofile', auth.isLoggedIn, function(req, res) {
+    req.checkBody('fullname', 'Fullname is required.').notEmpty();
+    req.checkBody('email', 'Valid is mail is required.').isEmail();
+    req.checkBody('address', 'Address is required.').notEmpty();
+    req.checkBody('phoneno', 'Phone number is required.').notEmpty();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        let message = '';
+        errors.forEach(error => {
+            message = message + error.msg + '<br>';
+        });
+        message = message + 'Please complete requirement!';
+        req.flash('changeProfileMessage', message);
+        res.redirect('back');
+    }
+
+    User.findByIdAndUpdate(req.user._id, {
+      $set: {
+        name: req.body.fullname,
+        email: req.body.email,
+        address: req.body.address,
+        phone_number: req.body.phoneno
+      }
+    }, {
+      new: false
+    }, function (err, user) {
+      if (err) {
+        return handleError(err);
+      }
+      req.login(user, function(err) {
+        if (err) {
+          console.log(err);
+          return;
+        } else {
+          console.log('Change profile successful!');
+          res.redirect('/profile');
+        }
+      });
     });
   });
 };

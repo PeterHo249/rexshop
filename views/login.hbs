@@ -1,4 +1,6 @@
-<h1>RexShop</h1>
+<a href="/">
+    <h1>RexShop</h1>
+</a>
 <div class="login">
     <div class="ribbon-wrapper h2 ribbon-red">
         <div class="ribbon-front">
@@ -10,7 +12,7 @@
     <form action="/login" method="post">
         <ul>
             {{#if error_message}}
-            <li>
+            <li class="info-string">
                 <p class="error-message">{{{error_message}}}</p>
             </li>
             {{/if}}
@@ -21,6 +23,10 @@
             <li>
                 <input type="password" name="password" placeholder="Password">
                 <div class=" icon lock"></div>
+            </li>
+            <li class="info-string">
+                <p>No account, <a href="/signup">create one!</a></p>
+                <p>Forgot password, <a href="/forgot">reset it!</a></p>
             </li>
         </ul>
         <div class="submit">

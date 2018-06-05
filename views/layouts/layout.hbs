@@ -84,7 +84,10 @@
 
     {{#if login_page}}
     {{else}}
-      {{> brand_slide}}
+      {{#if cart_page}}
+      {{else}}
+        {{> brand_slide}}
+      {{/if}}
       {{> footer}}
     {{/if}}
 

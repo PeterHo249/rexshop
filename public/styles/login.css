@@ -155,7 +155,6 @@ input[type="submit"]:hover{
  .h2 .ribbon-front {
 	background-color: #ffa300;
 	height: 43px;
-	width: 145px;
 	position: relative;
 	left:-10px;
 	z-index: 2;
