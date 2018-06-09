@@ -28,8 +28,7 @@ var OrderSchema = new Schema({
     },
     shopping: {
         type: Boolean,
-        default: true,
-        required: true
+        default: true
     },
     count: {
         type: Number,

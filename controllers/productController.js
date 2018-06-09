@@ -1,7 +1,10 @@
 /* jshint esversion: 6 */
 let Product = require('../models/product');
+let Order = require('../models/order');
+let OrderDetail = require('../models/order_detail');
 
 let async = require('async');
+let jsontoken = require('../config/jsontoken');
 
 // MARK - Need some test in this
 exports.product_home = function (req, res) {
@@ -32,13 +35,28 @@ exports.product_home = function (req, res) {
         }
         // render
         if (req.user) {
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                if (temp.userid === req.user._id) {
+                    cart_info = temp;
+                }
+            }
+
             res.render('index', {
                 title: 'RexShop',
                 homepage: true,
                 customer: true,
                 user: req.user,
                 new_items: results.new_items,
-                trend_items: results.trend_items
+                trend_items: results.trend_items,
+                cart: cart_info
             });
         } else {
             res.render('index', {
@@ -127,6 +145,20 @@ exports.product_category_get = function (req, res) {
 
         // render
         if (req.user) {
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                if (temp.userid === req.user._id) {
+                    cart_info = temp;
+                }
+            }
+
             res.render('product_list', {
                 title: 'RexShop',
                 category_title: category_title,
@@ -136,7 +168,8 @@ exports.product_category_get = function (req, res) {
                 is_filter: isFilter,
                 shop_page: true,
                 customer: true,
-                user: req.user
+                user: req.user,
+                cart: cart_info
             });
         } else {
             res.render('product_list', {
@@ -256,6 +289,20 @@ exports.product_brand_get = function (req, res) {
 
         // render
         if (req.user) {
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                if (temp.userid === req.user._id) {
+                    cart_info = temp;
+                }
+            }
+
             res.render('product_list', {
                 title: 'RexShop',
                 category_title: category_title,
@@ -265,7 +312,8 @@ exports.product_brand_get = function (req, res) {
                 is_filter: isFilter,
                 shop_page: true,
                 customer: true,
-                user: req.user
+                user: req.user,
+                cart: cart_info
             });
         } else {
             res.render('product_list', {
@@ -330,13 +378,28 @@ exports.product_detail_get = function (req, res) {
 
         // render
         if (req.user) {
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                if (temp.userid === req.user._id) {
+                    cart_info = temp;
+                }
+            }
+
             res.render('single_product', {
                 title: 'RexShop',
                 category_name: category_name,
                 item: results.product,
                 product_page: true,
                 customer: true,
-                user: req.user
+                user: req.user,
+                cart: cart_info
             });
         } else {
             res.render('single_product', {
@@ -350,5 +413,125 @@ exports.product_detail_get = function (req, res) {
 };
 
 exports.add_item_cart = function(req, res) {
-    
+    let cart_info = {
+        cartid: '',
+        userid: '',
+        count: 0,
+        cost: 0
+    };
+    if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+        // Already have order
+
+        // parse JSON token to object
+        cart_info = jsontoken.decodeToken(req.cookies.carttoken);
+        // check valid cart
+        if (req.user._id === cart_info.userid) {
+            // if valid, fetch order from db and update
+            Order.findById(cart_info.cartid, function(err, cart) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                if (!cart) {
+                    console.log('Do not exist cart with id: ' + cart_info.cartid);
+                    return;
+                }
+
+                cart_info.count = cart_info.count + req.body.itemquantity;
+                cart_info.cost = cart_info.cost + (req.body.itemquantity * req.body.itemprice);
+                cart.cost = cart_info.cost;
+                cart.count = cart_info.count;
+                cart.save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+                let orderdetail = new OrderDetail({
+                    order_id: cart_info.cartid,
+                    product_id: req.body.itemid,
+                    amount: req.body.itemquantity
+                });
+
+                orderdetail.save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        } else {
+            // create new order
+            let cart = new Order({
+                customer_id: req.user._id,
+                cost: req.body.itemquantity * req.body.itemprice,
+                date: new Date(),
+                count: req.body.itemquantity
+            });
+
+            cart_info.userid = req.user._id;
+            cart_info.cartid = cart._id;
+            cart_info.cost = cart.cost;
+            cart_info.count = cart.count;
+
+            cart.save(function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+            let orderdetail = new OrderDetail({
+                order_id: cart_info.cartid,
+                product_id: req.body.itemid,
+                amount: req.body.itemquantity
+            });
+
+            orderdetail.save(function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+    } else {
+        // New cookie
+        // create new order
+        let cart = new Order({
+            customer_id: req.user._id,
+            cost: req.body.itemquantity * req.body.itemprice,
+            date: new Date(),
+            count: req.body.itemquantity
+        });
+
+        cart_info.userid = req.user._id;
+        cart_info.cartid = cart._id;
+        cart_info.cost = cart.cost;
+        cart_info.count = cart.count;
+
+        cart.save(function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+
+        let orderdetail = new OrderDetail({
+            order_id: cart_info.cartid,
+            product_id: req.body.itemid,
+            amount: req.body.itemquantity
+        });
+
+        orderdetail.save(function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    // encode cart_info to JSON token
+    let cookiestring = jsontoken.generateToken(cart_info);
+    res.cookie('carttoken', cookiestring, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true
+    });
+
+    res.redirect('back');
 };
