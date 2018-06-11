@@ -1,7 +1,6 @@
 /* jshint esversion: 6 */
 let Product = require('../models/product');
 let Order = require('../models/order');
-let OrderDetail = require('../models/order_detail');
 
 let async = require('async');
 let jsontoken = require('../config/jsontoken');
@@ -44,7 +43,7 @@ exports.product_home = function (req, res) {
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
                 let temp = jsontoken.decodeToken(req.cookies.carttoken);
-                if (temp.userid === req.user._id) {
+                if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
             }
@@ -154,7 +153,7 @@ exports.product_category_get = function (req, res) {
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
                 let temp = jsontoken.decodeToken(req.cookies.carttoken);
-                if (temp.userid === req.user._id) {
+                if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
             }
@@ -298,7 +297,7 @@ exports.product_brand_get = function (req, res) {
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
                 let temp = jsontoken.decodeToken(req.cookies.carttoken);
-                if (temp.userid === req.user._id) {
+                if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
             }
@@ -387,7 +386,7 @@ exports.product_detail_get = function (req, res) {
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
                 let temp = jsontoken.decodeToken(req.cookies.carttoken);
-                if (temp.userid === req.user._id) {
+                if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
             }
@@ -412,7 +411,7 @@ exports.product_detail_get = function (req, res) {
     });
 };
 
-exports.add_item_cart = function(req, res) {
+exports.add_item_cart = function (req, res) {
     let cart_info = {
         cartid: '',
         userid: '',
@@ -421,13 +420,15 @@ exports.add_item_cart = function(req, res) {
     };
     if (req.cookies.carttoken && req.cookies.carttoken !== '') {
         // Already have order
-
+        console.log('---------> valid cart token');
         // parse JSON token to object
         cart_info = jsontoken.decodeToken(req.cookies.carttoken);
         // check valid cart
-        if (req.user._id === cart_info.userid) {
+        let req_id = req.user._id.toString();
+        let cart_user_id = cart_info.userid.toString();
+        if (req_id === cart_user_id) {
             // if valid, fetch order from db and update
-            Order.findById(cart_info.cartid, function(err, cart) {
+            Order.findById(cart_info.cartid, function (err, cart) {
                 if (err) {
                     console.log(err);
                     return;
@@ -438,100 +439,98 @@ exports.add_item_cart = function(req, res) {
                     return;
                 }
 
-                cart_info.count = cart_info.count + req.body.itemquantity;
+                cart_info.count = cart_info.count + parseInt(req.body.itemquantity);
                 cart_info.cost = cart_info.cost + (req.body.itemquantity * req.body.itemprice);
+                console.log('------------------------>');
+                console.log(cart_info);
+                console.log('<------------------------');
                 cart.cost = cart_info.cost;
                 cart.count = cart_info.count;
-                cart.save(function(err) {
+                cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
+                cart.save(function (err) {
                     if (err) {
                         console.log(err);
                     }
                 });
 
-                let orderdetail = new OrderDetail({
-                    order_id: cart_info.cartid,
-                    product_id: req.body.itemid,
-                    amount: req.body.itemquantity
+                // encode cart_info to JSON token
+                let cookiestring = jsontoken.generateToken(cart_info);
+                res.cookie('carttoken', cookiestring, {
+                    maxAge: 1000 * 60 * 60,
+                    httpOnly: true
                 });
 
-                orderdetail.save(function(err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+                res.redirect('back');
             });
         } else {
             // create new order
+            console.log('-----------> create new cart');
             let cart = new Order({
                 customer_id: req.user._id,
                 cost: req.body.itemquantity * req.body.itemprice,
                 date: new Date(),
-                count: req.body.itemquantity
+                count: req.body.itemquantity,
+                item_list: []
             });
 
             cart_info.userid = req.user._id;
             cart_info.cartid = cart._id;
             cart_info.cost = cart.cost;
             cart_info.count = cart.count;
+            cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
+            console.log('------------------------>');
+            console.log(cart_info);
+            console.log('<------------------------');
 
-            cart.save(function(err) {
+            cart.save(function (err) {
                 if (err) {
                     console.log(err);
                 }
             });
 
-            let orderdetail = new OrderDetail({
-                order_id: cart_info.cartid,
-                product_id: req.body.itemid,
-                amount: req.body.itemquantity
+            // encode cart_info to JSON token
+            let cookiestring = jsontoken.generateToken(cart_info);
+            res.cookie('carttoken', cookiestring, {
+                maxAge: 1000 * 60 * 60,
+                httpOnly: true
             });
 
-            orderdetail.save(function(err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            res.redirect('back');
         }
     } else {
         // New cookie
         // create new order
+        console.log('----------------> new cookie');
         let cart = new Order({
             customer_id: req.user._id,
             cost: req.body.itemquantity * req.body.itemprice,
             date: new Date(),
-            count: req.body.itemquantity
+            count: req.body.itemquantity,
+            item_list: []
         });
 
         cart_info.userid = req.user._id;
         cart_info.cartid = cart._id;
         cart_info.cost = cart.cost;
         cart_info.count = cart.count;
+        cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
+        console.log('------------------------>');
+        console.log(cart_info);
+        console.log('<------------------------');
 
-        cart.save(function(err) {
+        cart.save(function (err) {
             if (err) {
                 console.log(err);
             }
         });
 
-        let orderdetail = new OrderDetail({
-            order_id: cart_info.cartid,
-            product_id: req.body.itemid,
-            amount: req.body.itemquantity
+        // encode cart_info to JSON token
+        let cookiestring = jsontoken.generateToken(cart_info);
+        res.cookie('carttoken', cookiestring, {
+            maxAge: 1000 * 60 * 60,
+            httpOnly: true
         });
 
-        orderdetail.save(function(err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        res.redirect('back');
     }
-
-    // encode cart_info to JSON token
-    let cookiestring = jsontoken.generateToken(cart_info);
-    res.cookie('carttoken', cookiestring, {
-        maxAge: 1000 * 60 * 60,
-        httpOnly: true
-    });
-
-    res.redirect('back');
 };

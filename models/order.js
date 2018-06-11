@@ -26,14 +26,17 @@ var OrderSchema = new Schema({
         required: true,
         default: 'Waiting'
     },
-    shopping: {
-        type: Boolean,
-        default: true
-    },
     count: {
         type: Number,
         default: 0
-    }
+    },
+    item_list: [{
+        item: {
+            type: Schema.ObjectId,
+            ref: 'product'
+        },
+        amount: Number
+    }]
 });
 
 //Export model

@@ -38,8 +38,6 @@
                     <div class="order_info d-flex flex-row">
                         <form action="/product/cart/add" method="POST">
                             <div class="clearfix" style="z-index: 1000;">
-                                <div class="product_price">{{item.market_price}} vnd</div>
-
                                 <!-- Product Quantity -->
                                 <div class="product_quantity clearfix">
                                     <span>Quantity: </span>
@@ -53,6 +51,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="product_price">{{item.market_price}} vnd</div>
                                 <input type="hidden" name="itemid" value="{{item._id}}">
                                 <input type="hidden" name="itemprice" value="{{item.market_price}}">
                                 <div class="button_container">

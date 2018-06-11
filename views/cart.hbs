@@ -1,5 +1,5 @@
 <!-- Cart -->
-{{!Argument: item}}
+{{!Argument: item, }}
 
 	<div class="cart_section">
 		<div class="container">
@@ -39,17 +39,19 @@
 						<div class="order_total">
 							<div class="order_total_content text-md-right">
 								<div class="order_total_title">Order Total:</div>
-								<div class="order_total_amount">{{total_cost}} vnd</div>
+								<div class="order_total_amount">{{cart.cost}} vnd</div>
 							</div>
 						</div>
 
 						<div class="cart_buttons">
-                            <a href="/clearcart/{{cart.cartid}}">
-							    <button type="button" class="button cart_button_clear">Clear</button>
-                            </a>
-                            <a href="/checkoutcart/{{cart.cartid}}">
-							    <button type="button" class="button cart_button_checkout">Payment</button>
-                            </a>
+							<form action="/clearcart" method="post" class="d-inline">
+								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+							    <button type="submit" class="button cart_button_clear">Clear</button>
+							</form>
+							<form action="/checkoutcart" method="post" class="d-inline">
+								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+							    <button type="submit" class="button cart_button_checkout">Payment</button>
+							</form>
 						</div>
 					</div>
 				</div>

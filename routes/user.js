@@ -23,7 +23,7 @@ module.exports = function (app, passport) {
 
     if (req.cookies.carttoken && req.cookies.carttoken !== '') {
       let temp = jsontoken.decodeToken(req.cookies.carttoken);
-      if (temp.userid === req.user._id) {
+      if (temp.userid.toString() === req.user._id.toString()) {
         cart_info = temp;
       }
     }
