@@ -36,13 +36,12 @@
                         <p>{{item.description}}</p>
                     </div>
                     <div class="order_info d-flex flex-row">
-                        <form action="#">
+                        <form action="/product/cart/add" method="POST">
                             <div class="clearfix" style="z-index: 1000;">
-
                                 <!-- Product Quantity -->
                                 <div class="product_quantity clearfix">
                                     <span>Quantity: </span>
-                                    <input id="quantity_input" type="text" pattern="[0-9]*" value="1">
+                                    <input id="quantity_input" type="text" pattern="[0-9]*" value="1" min="1" name="itemquantity">
                                     <div class="quantity_buttons">
                                         <div id="quantity_inc_button" class="quantity_inc quantity_control">
                                             <i class="fas fa-chevron-up"></i>
@@ -52,18 +51,13 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                
-
-                            </div>
-
-                            <div class="product_price">{{item.market_price}} vnd</div>
-                            <div class="button_container">
-                                <form action="/product/cart/add/{{item._id}}" method="post">
+                                <div class="product_price">{{item.market_price}} vnd</div>
+                                <input type="hidden" name="itemid" value="{{item._id}}">
+                                <input type="hidden" name="itemprice" value="{{item.market_price}}">
+                                <div class="button_container">
                                     <button type="submit" class="button cart_button">Add to Cart</button>
-                                </form>
+                                </div>
                             </div>
-
                         </form>
                     </div>
                 </div>

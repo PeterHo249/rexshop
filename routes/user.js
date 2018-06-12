@@ -5,15 +5,34 @@ var auth = require('../config/auth');
 var User = require('../models/user');
 var async = require('async');
 var bcrypt = require('bcrypt-nodejs');
-const { check, validationResult } = require('express-validator/check');
+let jsontoken = require('../config/jsontoken');
+const {
+  check,
+  validationResult
+} = require('express-validator/check');
 
 module.exports = function (app, passport) {
   /* GET users listing. */
   app.get('/profile', auth.isLoggedIn, function (req, res, next) {
+    let cart_info = {
+      cartid: '',
+      userid: '',
+      count: 0,
+      cost: 0
+    };
+
+    if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+      let temp = jsontoken.decodeToken(req.cookies.carttoken);
+      if (temp.userid.toString() === req.user._id.toString()) {
+        cart_info = temp;
+      }
+    }
+
     res.render('profile', {
       user: req.user,
       cart_page: true,
-      customer: true
+      customer: true,
+      cart: cart_info
     });
   });
 
@@ -24,65 +43,65 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/changepassword', auth.isLoggedIn, function(req, res) {
+  app.post('/changepassword', auth.isLoggedIn, function (req, res) {
     async.waterfall([
-      function(done) {
-        let errors = [];
-        if (req.body.currentpass === undefined || req.body.currentpass.length == 0) {
-          errors.push('Current password is required.');
-        }
-        if (req.body.newpass === undefined || req.body.newpass.length == 0) {
-          errors.push('New password is required.');
-        }
-        if (req.body.newpass !== req.body.renewpass) {
-          errors.push('New password and re-enter password have to be the same.');
-        }
-        if (errors.length !== 0) {
-          let message = '';
-          errors.forEach(error => {
-            message = message + error + '<br>';
-          });
-          req.flash('changePasswordMessage', message);
-          console.log('=====> Error in change password');
-          return res.redirect('back');
-        }
-
-        User.findById(req.user._id, function(err, user) {
-          if (!user.validPassword(req.body.currentpass)) {
-            req.flash('changePasswordMessage', 'Current password is not match.');
+        function (done) {
+          let errors = [];
+          if (req.body.currentpass === undefined || req.body.currentpass.length == 0) {
+            errors.push('Current password is required.');
+          }
+          if (req.body.newpass === undefined || req.body.newpass.length == 0) {
+            errors.push('New password is required.');
+          }
+          if (req.body.newpass !== req.body.renewpass) {
+            errors.push('New password and re-enter password have to be the same.');
+          }
+          if (errors.length !== 0) {
+            let message = '';
+            errors.forEach(error => {
+              message = message + error + '<br>';
+            });
+            req.flash('changePasswordMessage', message);
             console.log('=====> Error in change password');
             return res.redirect('back');
           }
-          user.password = user.generateHash(req.body.newpass);
-          user.save(function(err) {
-            done(err, user);
+
+          User.findById(req.user._id, function (err, user) {
+            if (!user.validPassword(req.body.currentpass)) {
+              req.flash('changePasswordMessage', 'Current password is not match.');
+              console.log('=====> Error in change password');
+              return res.redirect('back');
+            }
+            user.password = user.generateHash(req.body.newpass);
+            user.save(function (err) {
+              done(err, user);
+            });
           });
-        });
-      },
-      function(user, done) {
-        let mailOptions = {
-          to: user.email,
-          subject: 'Change Password Email',
-          user: user,
-          email: true
-        };
-        app.mailer.send('emailchange', mailOptions, function (err, message) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('Email sent');
-            res.redirect('/');
-          }
-        });
-      }
-    ],
-    function(err) {
-      console.log('redirecting...');
-      res.redirect('/');
-    });
+        },
+        function (user, done) {
+          let mailOptions = {
+            to: user.email,
+            subject: 'Change Password Email',
+            user: user,
+            email: true
+          };
+          app.mailer.send('emailchange', mailOptions, function (err, message) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log('Email sent');
+              res.redirect('/');
+            }
+          });
+        }
+      ],
+      function (err) {
+        console.log('redirecting...');
+        res.redirect('/');
+      });
   });
 
-  app.get('/changeprofile', auth.isLoggedIn, function(req, res) {
+  app.get('/changeprofile', auth.isLoggedIn, function (req, res) {
     res.render('changeprofile', {
       login_page: true,
       error_message: req.flash('changeProfileMessage'),
@@ -90,7 +109,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/changeprofile', auth.isLoggedIn, function(req, res) {
+  app.post('/changeprofile', auth.isLoggedIn, function (req, res) {
     req.checkBody('fullname', 'Fullname is required.').notEmpty();
     req.checkBody('email', 'Valid is mail is required.').isEmail();
     req.checkBody('address', 'Address is required.').notEmpty();
@@ -98,13 +117,13 @@ module.exports = function (app, passport) {
 
     var errors = req.validationErrors();
     if (errors) {
-        let message = '';
-        errors.forEach(error => {
-            message = message + error.msg + '<br>';
-        });
-        message = message + 'Please complete requirement!';
-        req.flash('changeProfileMessage', message);
-        res.redirect('back');
+      let message = '';
+      errors.forEach(error => {
+        message = message + error.msg + '<br>';
+      });
+      message = message + 'Please complete requirement!';
+      req.flash('changeProfileMessage', message);
+      res.redirect('back');
     }
 
     User.findByIdAndUpdate(req.user._id, {
@@ -120,7 +139,7 @@ module.exports = function (app, passport) {
       if (err) {
         return handleError(err);
       }
-      req.login(user, function(err) {
+      req.login(user, function (err) {
         if (err) {
           console.log(err);
           return;
