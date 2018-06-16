@@ -8,9 +8,10 @@ var expressHbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var validator = require('express-validator');
 var mailer = require('express-mailer');
-
+var OrderRouter = require('./routes/order');
 var app = express();
 
+let Order = require('./models/order');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
@@ -70,6 +71,101 @@ mailer.extend(app, {
 require('./routes/index')(app, passport);
 require('./routes/product')(app, passport);
 require('./routes/user')(app, passport);
+
+
+// Set up route for salesman
+app.get('/salesman/order', function(req, res) {
+    Order.find({}).exec(function(err, orders) {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            res.render('order', { order_items: orders, title: 'RexShop', salesman: true, home_page: true });
+        }
+    });
+});
+
+app.get('/salesman/order/add', function(req, res) {
+    res.render('add_order', { title: 'RexShop', salesman: true, home_page: true });
+});
+app.get('/salesman/order/:id', function(req, res) {
+    Order.findById(req.params.id).exec(function(err, order) {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            res.render('show_order_detail', { order_item: order, title: 'RexShop', salesman: true, home_page: true });
+        }
+    });
+});
+
+app.get('/salesman/order/edit/:id', function(req, res) {
+    Order.findOne({ _id: req.params.id }).exec(function(err, order) {
+        if (err) {
+            return next(err);
+        } else {
+            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true, home_page: true })
+        }
+    });
+});
+
+app.post('/salesman/order/delete/:id', function(req, res) {
+    Order.findByIdAndRemove({ _id: req.params.id }).exec(function(err, order) {
+        if (err) {
+            return next(err);
+        } else {
+            console.log("Deleted");
+            res.redirect("/salesman/order");
+        }
+    });
+});
+
+app.post('/salesman/order/update/:id', function(req, res) {
+    Order.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: {
+            customer_id: req.body.customer_id,
+            cost: req.body.cost,
+            date: req.body.date,
+            status: req.body.select_picker,
+            count: req.body.count,
+            item_list: req.body.item_list
+
+        }
+    }, { new: true }, function(err, order) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.redirect("/salesman/order/" + order._id);
+    });
+});
+
+app.post('/salesman/order/save', function(req, res) {
+    var customer_id = req.body.customer_id;
+    var cost = req.body.cost;
+    var count = req.body.count;
+    var date = req.body.date;
+    var status = req.body.select_picker;
+    var item_list = req.body.item_list;
+
+    var order = new Order({
+        customer_id: customer_id,
+        cost: cost,
+        count: count,
+        date: date,
+        status: status,
+        item_list: item_list
+    });
+    order.save(function(err) {
+        if (err) {
+            console.log(err);
+            res.render('add_order', { title: 'RexShop', salesman: true, home_page: true });
+        } else {
+            console.log("Successfully created an order.");
+            res.redirect('/salesman/order/' + order._id);
+        }
+
+    });
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));

@@ -1,7 +1,7 @@
 <div class="show_order_detail">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-8">
                         <h2 class="page_title">Show order detail</h2>
                         <br>
                         <a href="/salesman/order" class="btn btn-primary">Back to all orders</a>
@@ -9,10 +9,6 @@
 
                         <table id="mytable" class="table table-bordred table-striped">
                             <tbody>
-                                <tr>
-                                    <td>Staff ID</td>
-                                    <td>{{order_item.staff_id}}</td>
-                                </tr>
                                 <tr>
                                     <td>Customer ID</td>
                                     <td>{{order_item.customer_id}}</td>
@@ -42,7 +38,9 @@
                         <br>
                         <br>
                         <form action="/salesman/order/delete/{{order_item._id}}" method="post">
-                            <button class="btn btn-danger" type="submit">Delete</button>
+                            {{!-- <button class="btn btn-danger" type="submit">Delete</button> --}}
+                            <button type="submit" class="btn btn-danger" onclick="if (!confirm('Are you sure to delete this record?')) { return false }">Delete</button>
+
                         </form>
                     </div>
                 </div>

@@ -3,14 +3,14 @@
     <div class="ribbon-front">
         <h3>Order Datatable</h3>
     </div> 
-    
+    <br><br>
+    <a href="/salesman/order/add" class="btn btn-info">Add new order</a>
+    <br><br>
         <div class="row">
-             <div class="col-md-12">
-                 <h4>Order Datatable</h4>
+             <div class="col-lg-8">
                  <div class="table-responsive">
                      <table id="mytable" class="table table-bordred table-striped">
                          <thead>
-                            <th>Staff ID</th>
                             <th>Customer ID</th>
                             <th>Cost</th>
                             <th>Date</th>
@@ -21,8 +21,7 @@
                         <tbody>
                             {{#each order_items}}
                             <tr>
-                                <td><a href="/salesman/order/{{_id}}">{{staff_id}}</a></td>
-                                <td>{{customer_id}}</td>
+                                <td><a href="/salesman/order/{{_id}}">{{customer_id}}</a></td>
                                 <td>{{cost}}</td>
                                 <td>{{date}}</td>
                                 <td>{{status}}</td>

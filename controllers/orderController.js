@@ -17,21 +17,26 @@ exports.list_order = function(req, res) {
             err.status = 404;
             return next(err);
         }
-        if (req.user) {
-            res.render('order', {
-                title: 'RexShop',
-                user: req.user,
-                order_items: results.orders,
-                salesman: true
-            });
-        } else {
-            res.render('order', {
-                title: 'RexShop',
-                order_items: results.orders,
-                salesman: true
-            });
-        }
-
+        // if (req.user) {
+        //     res.render('order', {
+        //         title: 'RexShop',
+        //         user: req.user,
+        //         order_items: results.orders,
+        //         salesman: true
+        //     });
+        // } else {
+        //     res.render('order', {
+        //         title: 'RexShop',
+        //         order_items: results.orders,
+        //         salesman: true
+        //     });
+        // }
+        res.render('order', {
+            title: 'RexShop',
+            order_items: results.orders,
+            homepage: true,
+            salesman: true
+        });
     });
 };
 
