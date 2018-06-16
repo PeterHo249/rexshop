@@ -79,20 +79,20 @@ app.get('/salesman/order', function(req, res) {
         if (err) {
             console.log("Error:", err);
         } else {
-            res.render('order', { order_items: orders, title: 'RexShop', salesman: true, home_page: true });
+            res.render('order', { order_items: orders, title: 'RexShop', salesman: true });
         }
     });
 });
 
 app.get('/salesman/order/add', function(req, res) {
-    res.render('add_order', { title: 'RexShop', salesman: true, home_page: true });
+    res.render('add_order', { title: 'RexShop', salesman: true });
 });
 app.get('/salesman/order/:id', function(req, res) {
     Order.findById(req.params.id).exec(function(err, order) {
         if (err) {
             console.log("Error:", err);
         } else {
-            res.render('show_order_detail', { order_item: order, title: 'RexShop', salesman: true, home_page: true });
+            res.render('show_order_detail', { order_item: order, title: 'RexShop', salesman: true });
         }
     });
 });
@@ -102,7 +102,7 @@ app.get('/salesman/order/edit/:id', function(req, res) {
         if (err) {
             return next(err);
         } else {
-            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true, home_page: true })
+            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true })
         }
     });
 });
@@ -157,7 +157,7 @@ app.post('/salesman/order/save', function(req, res) {
     order.save(function(err) {
         if (err) {
             console.log(err);
-            res.render('add_order', { title: 'RexShop', salesman: true, home_page: true });
+            res.render('add_order', { title: 'RexShop', salesman: true });
         } else {
             console.log("Successfully created an order.");
             res.redirect('/salesman/order/' + order._id);
