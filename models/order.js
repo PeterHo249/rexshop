@@ -13,8 +13,7 @@ var OrderSchema = new Schema({
     },
     cost: {
         type: Number,
-        min: 0,
-        required: true
+        min: 0
     },
     date: {
         type: Date,

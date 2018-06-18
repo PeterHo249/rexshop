@@ -12,7 +12,7 @@ var OrderRouter = require('./routes/order');
 var app = express();
 
 let Order = require('./models/order');
-
+let Product = require('./models/product');
 //Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://peterho249:from!to8@ds263989.mlab.com:63989/rexshop';
@@ -140,28 +140,35 @@ app.post('/salesman/order/update/:id', function(req, res) {
 
 app.post('/salesman/order/save', function(req, res) {
     var customer_id = req.body.customer_id;
-    var cost = req.body.cost;
-    var count = req.body.count;
     var date = req.body.date;
     var status = req.body.select_picker;
-    var item_list = req.body.item_list;
-
-    var order = new Order({
-        customer_id: customer_id,
-        cost: cost,
-        count: count,
-        date: date,
-        status: status,
-        item_list: item_list
-    });
-    order.save(function(err) {
+    var item = req.body.item;
+    var count = req.body.count;
+    var count2 = Number(count);
+    Product.findById({ _id: item }).exec(function(err, product) {
         if (err) {
             console.log(err);
-            res.render('add_order', { title: 'RexShop', salesman: true });
-        } else {
-            console.log("Successfully created an order.");
-            res.redirect('/salesman/order/' + order._id);
         }
+
+        var order = new Order({
+            customer_id: customer_id,
+            date: date,
+            status: status,
+            cost: '',
+            count: count2,
+            item_list: []
+        });
+        order.cost = product.market_price * count2;
+        order.item_list.push({ item: item, amount: count2 });
+        order.save(function(err) {
+            if (err) {
+                console.log(err);
+                res.render('add_order', { title: 'RexShop', salesman: true });
+            } else {
+                console.log("Successfully created an order.");
+                res.redirect('/salesman/order/' + order._id);
+            }
+        });
 
     });
 });

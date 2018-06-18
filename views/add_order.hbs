@@ -1,21 +1,9 @@
 
-<script>
-function myFunction() {
-    var i = 0;
-    var x = document.createElement("input1");
-    x.setAttribute("type", "text");
-    var y = document.createElement("input2");
-    y.setAttribute("type", "text");
-    document.body.appendChild(x);
-    document.body.appendChild(y);
-}
-</script>
-
 <div class="add_order_page">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h2>Add new order</h2>
+                        <h2 style="color:#069" class="page-title">Add new order</h2>
                         <br>
                         <a href="/salesman/order" class="btn btn-primary">Back to all orders</a>
                         <br><br>
@@ -26,10 +14,6 @@ function myFunction() {
                                     <tr>
                                         <td>Customer ID</td>
                                         <td><input type="text" name="customer_id"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cost</td>
-                                        <td><input type="text" name="cost"></td>
                                     </tr>
                                     <tr>
                                         <td>Date</td>
@@ -46,10 +30,14 @@ function myFunction() {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Count</td>
-                                        <td><input type="text" name="count"></td>
+                                        <td>Product ID</td>
+                                        <td><input type="text" name="item"></td>
                                     </tr>
-
+                                    <tr>
+                                        <td>Count</td>
+                                        <td><input type="number" name="count"></td>
+                                    </tr>
+                    
                                     <tr>
                                         <td><button class="btn btn-primary" type="submit">Create</button></td>
                                     </tr>
