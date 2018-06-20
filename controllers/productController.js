@@ -6,19 +6,19 @@ let async = require('async');
 let jsontoken = require('../config/jsontoken');
 
 // MARK - Need some test in this
-exports.product_home = function (req, res) {
+exports.product_home = function(req, res) {
     async.parallel({
-        new_items: function (callback) {
+        new_items: function(callback) {
             Product.findRandom({}, {}, {
                 limit: 6
             }, callback);
         },
-        trend_items: function (callback) {
+        trend_items: function(callback) {
             Product.findRandom({}, {}, {
                 limit: 6
             }, callback);
         }
-    }, function (err, results) {
+    }, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -69,7 +69,7 @@ exports.product_home = function (req, res) {
     });
 };
 
-exports.product_category_get = function (req, res) {
+exports.product_category_get = function(req, res) {
     let category_type = '';
     let category_title = '';
     let isFilter = true;
@@ -126,13 +126,13 @@ exports.product_category_get = function (req, res) {
     }
 
     async.parallel({
-        products: function (callback) {
+        products: function(callback) {
             Product.find({
                     'type': category_type
                 })
                 .exec(callback);
         }
-    }, function (err, results) {
+    }, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -184,7 +184,7 @@ exports.product_category_get = function (req, res) {
     });
 };
 
-exports.product_brand_get = function (req, res) {
+exports.product_brand_get = function(req, res) {
     let category_type = '';
     let category_title = '';
     let brand_name = '';
@@ -269,14 +269,14 @@ exports.product_brand_get = function (req, res) {
     }
 
     async.parallel({
-        products: function (callback) {
+        products: function(callback) {
             Product.find({
                     'type': category_type,
                     'brand': brand_name
                 })
                 .exec(callback);
         }
-    }, function (err, results) {
+    }, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -328,13 +328,13 @@ exports.product_brand_get = function (req, res) {
     });
 };
 
-exports.product_detail_get = function (req, res) {
+exports.product_detail_get = function(req, res) {
     async.parallel({
-        product: function (callback) {
+        product: function(callback) {
             Product.findById(req.params.id)
                 .exec(callback);
         }
-    }, function (err, results) {
+    }, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -411,7 +411,7 @@ exports.product_detail_get = function (req, res) {
     });
 };
 
-exports.add_item_cart = function (req, res) {
+exports.add_item_cart = function(req, res) {
     let cart_info = {
         cartid: '',
         userid: '',
@@ -428,7 +428,7 @@ exports.add_item_cart = function (req, res) {
         let cart_user_id = cart_info.userid.toString();
         if (req_id === cart_user_id) {
             // if valid, fetch order from db and update
-            Order.findById(cart_info.cartid, function (err, cart) {
+            Order.findById(cart_info.cartid, function(err, cart) {
                 if (err) {
                     console.log(err);
                     return;
@@ -446,8 +446,8 @@ exports.add_item_cart = function (req, res) {
                 console.log('<------------------------');
                 cart.cost = cart_info.cost;
                 cart.count = cart_info.count;
-                cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
-                cart.save(function (err) {
+                cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
+                cart.save(function(err) {
                     if (err) {
                         console.log(err);
                     }
@@ -477,12 +477,12 @@ exports.add_item_cart = function (req, res) {
             cart_info.cartid = cart._id;
             cart_info.cost = cart.cost;
             cart_info.count = cart.count;
-            cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
+            cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
             console.log('------------------------>');
             console.log(cart_info);
             console.log('<------------------------');
 
-            cart.save(function (err) {
+            cart.save(function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -513,12 +513,12 @@ exports.add_item_cart = function (req, res) {
         cart_info.cartid = cart._id;
         cart_info.cost = cart.cost;
         cart_info.count = cart.count;
-        cart.item_list.push({item: req.body.itemid, amount: req.body.itemquantity});
+        cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
         console.log('------------------------>');
         console.log(cart_info);
         console.log('<------------------------');
 
-        cart.save(function (err) {
+        cart.save(function(err) {
             if (err) {
                 console.log(err);
             }
