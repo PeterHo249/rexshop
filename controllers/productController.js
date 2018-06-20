@@ -5,20 +5,21 @@ let Order = require('../models/order');
 let async = require('async');
 let jsontoken = require('../config/jsontoken');
 
+const item_per_page = 24;
 // MARK - Need some test in this
-exports.product_home = function(req, res) {
+exports.product_home = function (req, res) {
     async.parallel({
-        new_items: function(callback) {
+        new_items: function (callback) {
             Product.findRandom({}, {}, {
                 limit: 6
             }, callback);
         },
-        trend_items: function(callback) {
+        trend_items: function (callback) {
             Product.findRandom({}, {}, {
                 limit: 6
             }, callback);
         }
-    }, function(err, results) {
+    }, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -69,7 +70,7 @@ exports.product_home = function(req, res) {
     });
 };
 
-exports.product_category_get = function(req, res) {
+exports.product_category_get = function (req, res) {
     let category_type = '';
     let category_title = '';
     let isFilter = true;
@@ -126,13 +127,13 @@ exports.product_category_get = function(req, res) {
     }
 
     async.parallel({
-        products: function(callback) {
+        products: function (callback) {
             Product.find({
                     'type': category_type
                 })
                 .exec(callback);
         }
-    }, function(err, results) {
+    }, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -143,6 +144,25 @@ exports.product_category_get = function(req, res) {
         }
 
         // render
+        let page_count = Math.floor(results.products.length / item_per_page);
+        let request_page = parseInt(req.params.page);
+        if (results.products.length % item_per_page !== 0) {
+            page_count++;
+        }
+        let prev_page = request_page == 1 ? 1 : request_page - 1;
+        let next_page = request_page == page_count ? page_count : request_page + 1;
+        let page_array = [];
+        for (let i = 0; i < page_count; i++) {
+            let temp = {
+                value: i + 1,
+                is_current: false,
+                has_brand: false
+            };
+            if (temp.value == request_page) {
+                temp.is_current = true;
+            }
+            page_array.push(temp);
+        }
         if (req.user) {
             let cart_info = {
                 cartid: '',
@@ -158,17 +178,22 @@ exports.product_category_get = function(req, res) {
                 }
             }
 
+
             res.render('product_list', {
                 title: 'RexShop',
                 category_title: category_title,
                 current_cate: req.params.category,
                 product_count: results.products.length,
-                product_items: results.products,
+                product_items: results.products.slice((request_page - 1) * item_per_page, request_page * item_per_page),
+                next_page: next_page,
+                prev_page: prev_page,
+                page_list: page_array,
                 is_filter: isFilter,
                 shop_page: true,
                 customer: true,
                 user: req.user,
-                cart: cart_info
+                cart: cart_info,
+                page: true
             });
         } else {
             res.render('product_list', {
@@ -176,15 +201,19 @@ exports.product_category_get = function(req, res) {
                 category_title: category_title,
                 current_cate: req.params.category,
                 product_count: results.products.length,
-                product_items: results.products,
+                product_items: results.products.slice((request_page - 1) * item_per_page, request_page * item_per_page),
+                next_page: next_page,
+                prev_page: prev_page,
+                page_list: page_array,
                 is_filter: isFilter,
-                shop_page: true
+                shop_page: true,
+                page: true
             });
         }
     });
 };
 
-exports.product_brand_get = function(req, res) {
+exports.product_brand_get = function (req, res) {
     let category_type = '';
     let category_title = '';
     let brand_name = '';
@@ -269,14 +298,14 @@ exports.product_brand_get = function(req, res) {
     }
 
     async.parallel({
-        products: function(callback) {
+        products: function (callback) {
             Product.find({
                     'type': category_type,
                     'brand': brand_name
                 })
                 .exec(callback);
         }
-    }, function(err, results) {
+    }, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -287,6 +316,25 @@ exports.product_brand_get = function(req, res) {
         }
 
         // render
+        let page_count = Math.floor(results.products.length / item_per_page);
+        let request_page = parseInt(req.params.page);
+        if (results.products.length % item_per_page !== 0) {
+            page_count++;
+        }
+        let prev_page = request_page == 1 ? 1 : request_page - 1;
+        let next_page = request_page == page_count ? page_count : request_page + 1;
+        let page_array = [];
+        for (let i = 0; i < page_count; i++) {
+            let temp = {
+                value: i + 1,
+                is_current: false,
+                has_brand: true
+            };
+            if (temp.value == request_page) {
+                temp.is_current = true;
+            }
+            page_array.push(temp);
+        }
         if (req.user) {
             let cart_info = {
                 cartid: '',
@@ -306,35 +354,45 @@ exports.product_brand_get = function(req, res) {
                 title: 'RexShop',
                 category_title: category_title,
                 current_cate: req.params.category,
+                current_brand: req.params.brand,
                 product_count: results.products.length,
-                product_items: results.products,
+                product_items: results.products.slice((request_page - 1) * item_per_page, request_page * item_per_page),
+                next_page: next_page,
+                prev_page: prev_page,
+                page_list: page_array,
                 is_filter: isFilter,
                 shop_page: true,
                 customer: true,
                 user: req.user,
-                cart: cart_info
+                cart: cart_info,
+                page: true
             });
         } else {
             res.render('product_list', {
                 title: 'RexShop',
                 category_title: category_title,
                 current_cate: req.params.category,
+                current_brand: req.params.brand,
                 product_count: results.products.length,
-                product_items: results.products,
+                product_items: results.products.slice((request_page - 1) * item_per_page, request_page * item_per_page),
+                next_page: next_page,
+                prev_page: prev_page,
+                page_list: page_array,
                 is_filter: isFilter,
-                shop_page: true
+                shop_page: true,
+                page: true
             });
         }
     });
 };
 
-exports.product_detail_get = function(req, res) {
+exports.product_detail_get = function (req, res) {
     async.parallel({
-        product: function(callback) {
+        product: function (callback) {
             Product.findById(req.params.id)
                 .exec(callback);
         }
-    }, function(err, results) {
+    }, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -411,7 +469,7 @@ exports.product_detail_get = function(req, res) {
     });
 };
 
-exports.add_item_cart = function(req, res) {
+exports.add_item_cart = function (req, res) {
     let cart_info = {
         cartid: '',
         userid: '',
@@ -428,7 +486,7 @@ exports.add_item_cart = function(req, res) {
         let cart_user_id = cart_info.userid.toString();
         if (req_id === cart_user_id) {
             // if valid, fetch order from db and update
-            Order.findById(cart_info.cartid, function(err, cart) {
+            Order.findById(cart_info.cartid, function (err, cart) {
                 if (err) {
                     console.log(err);
                     return;
@@ -446,8 +504,11 @@ exports.add_item_cart = function(req, res) {
                 console.log('<------------------------');
                 cart.cost = cart_info.cost;
                 cart.count = cart_info.count;
-                cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
-                cart.save(function(err) {
+                cart.item_list.push({
+                    item: req.body.itemid,
+                    amount: req.body.itemquantity
+                });
+                cart.save(function (err) {
                     if (err) {
                         console.log(err);
                     }
@@ -477,12 +538,15 @@ exports.add_item_cart = function(req, res) {
             cart_info.cartid = cart._id;
             cart_info.cost = cart.cost;
             cart_info.count = cart.count;
-            cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
+            cart.item_list.push({
+                item: req.body.itemid,
+                amount: req.body.itemquantity
+            });
             console.log('------------------------>');
             console.log(cart_info);
             console.log('<------------------------');
 
-            cart.save(function(err) {
+            cart.save(function (err) {
                 if (err) {
                     console.log(err);
                 }
@@ -513,12 +577,15 @@ exports.add_item_cart = function(req, res) {
         cart_info.cartid = cart._id;
         cart_info.cost = cart.cost;
         cart_info.count = cart.count;
-        cart.item_list.push({ item: req.body.itemid, amount: req.body.itemquantity });
+        cart.item_list.push({
+            item: req.body.itemid,
+            amount: req.body.itemquantity
+        });
         console.log('------------------------>');
         console.log(cart_info);
         console.log('<------------------------');
 
-        cart.save(function(err) {
+        cart.save(function (err) {
             if (err) {
                 console.log(err);
             }
@@ -534,3 +601,132 @@ exports.add_item_cart = function(req, res) {
         res.redirect('back');
     }
 };
+
+exports.search_get = function (req, res) {
+    let category_type = '';
+    let category_title = '';
+    let isFilter = false;
+
+    switch (req.query.searchcate) {
+        case 'dslr':
+            category_type = 'camera/dslr';
+            category_title = 'DSLR Cameras';
+            break;
+        case 'mirrorless':
+            category_type = 'camera/mirrorless';
+            category_title = 'Mirrorless Cameras';
+            break;
+        case 'compact':
+            category_type = 'camera/compact';
+            category_title = 'Compact Cameras';
+            break;
+        case 'action':
+            category_type = 'camera/action';
+            category_title = 'Action Cameras';
+            break;
+        case 'len':
+            category_type = 'camera/len';
+            category_title = 'Camera Lens';
+            break;
+        case 'all':
+            category_type = '*';
+            category_title = 'All';
+            break;
+        case 'accessory':
+            category_title = 'Accessories';
+            category_type = new RegExp('^asseccory', 'i');
+            break;
+        default:
+            break;
+    }
+
+    async.parallel({
+            products: function (callback) {
+                if (category_type === '*') {
+                    Product.find({
+                            $text: {
+                                $search: req.query.searchstring,
+                                $caseSensitive: false
+                            }
+                        }, {
+                            score: {
+                                $meta: 'textScore'
+                            }
+                        })
+                        .sort({
+                            score: {
+                                $meta: 'textScore'
+                            }
+                        })
+                        .exec(callback);
+                } else {
+                    Product.find({
+                            'type': category_type,
+                            $text: {
+                                $search: req.query.searchstring,
+                                $caseSensitive: false
+                            }
+                        }, {
+                            score: {
+                                $meta: 'textScore'
+                            }
+                        })
+                        .sort({
+                            score: {
+                                $meta: 'textScore'
+                            }
+                        })
+                        .exec(callback);
+                }
+            }
+        },
+        function (err, results) {
+            if (err) {
+                return next(err);
+            }
+            if (results.products == null) {
+                let err = new Error('Product not found');
+                err.status = 404;
+                return next(err);
+            }
+
+            // render
+            if (req.user) {
+                let cart_info = {
+                    cartid: '',
+                    userid: '',
+                    count: 0,
+                    cost: 0
+                };
+
+                if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                    let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                    if (temp.userid.toString() === req.user._id.toString()) {
+                        cart_info = temp;
+                    }
+                }
+
+
+                res.render('product_list', {
+                    title: 'RexShop',
+                    category_title: 'Search Result',
+                    product_count: results.products.length,
+                    product_items: results.products,
+                    is_filter: isFilter,
+                    shop_page: true,
+                    customer: true,
+                    user: req.user,
+                    cart: cart_info
+                });
+            } else {
+                res.render('product_list', {
+                    title: 'RexShop',
+                    category_title: 'Search Result',
+                    product_count: results.products.length,
+                    product_items: results.products,
+                    is_filter: isFilter,
+                    shop_page: true
+                });
+            }
+        })
+}
