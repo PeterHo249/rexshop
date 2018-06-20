@@ -1,17 +1,33 @@
 {{#if email}}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121080327-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121080327-1');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Verification</title>
 </head>
+
 <body>
   <div>
     {{{body}}}
   </div>
 </body>
+
 </html>
 
 {{else}}
@@ -23,78 +39,50 @@
   <title>{{title}}</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> {{#if login_page}}
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet'
+    type='text/css'>
+  <script type="application/x-javascript">
+    addEventListener("load", function () {
+      setTimeout(hideURLbar, 0);
+    }, false);
 
-  {{#if login_page}}
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
-  <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-  <link rel="stylesheet" type="text/css" href="/styles/login.css">
-  {{else}}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    function hideURLbar() {
+      window.scrollTo(0, 1);
+    }
+  </script>
+  <link rel="stylesheet" type="text/css" href="/styles/login.css"> {{else}}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
   <link href="/plugins/fontawesome-free-5.0.1/css/fontawesome-all.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
   <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
   <link rel="stylesheet" type="text/css" href="/plugins/OwlCarousel2-2.2.1/animate.css">
   <link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.0/slick.css">
-  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
-
-  {{#if homepage}}
+  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.12.1.custom/jquery-ui.css"> {{#if homepage}}
   <link rel="stylesheet" type="text/css" href="/styles/main_styles.css">
-  <link rel="stylesheet" type="text/css" href="/styles/responsive.css">
-  {{/if}}
-
-  {{#if shop_page}}
+  <link rel="stylesheet" type="text/css" href="/styles/responsive.css"> {{/if}} {{#if shop_page}}
   <link rel="stylesheet" type="text/css" href="/styles/shop_styles.css">
-  <link rel="stylesheet" type="text/css" href="/styles/shop_responsive.css">
-  {{/if}}
-
-  {{#if product_page}}
+  <link rel="stylesheet" type="text/css" href="/styles/shop_responsive.css"> {{/if}} {{#if product_page}}
   <link rel="stylesheet" type="text/css" href="/styles/product_styles.css">
-  <link rel="stylesheet" type="text/css" href="/styles/product_responsive.css">
-  {{/if}}
-
-  {{#if cart_page}}
+  <link rel="stylesheet" type="text/css" href="/styles/product_responsive.css"> {{/if}} {{#if cart_page}}
   <link rel="stylesheet" type="text/css" href="/styles/cart_styles.css">
-  <link rel="stylesheet" type="text/css" href="/styles/cart_responsive.css">
-  {{/if}}
-  {{/if}}
+  <link rel="stylesheet" type="text/css" href="/styles/cart_responsive.css"> {{/if}} {{/if}}
 </head>
 
 <body>
   <div class="super_container">
 
-    {{#if login_page}}
-    {{else}}
-      {{#if manager}} 
-        {{> navbar_manager}} 
-      {{else}} 
-        {{#if salesman}} 
-          {{> navbar_salesman}}
-        {{else}} 
-          {{#if customer}} 
-            {{> navbar_guest}} 
-          {{else}} 
-            {{> navbar_default}} 
-          {{/if}} 
-        {{/if}} 
-      {{/if}}
-    {{/if}}
-
-    {{{body}}}     
-
-    {{#if login_page}}
-    {{else}}
-      {{#if cart_page}}
-      {{else}}
-        {{> brand_slide}}
-      {{/if}}
-      {{> footer}}
-    {{/if}}
+    {{#if login_page}} {{else}} {{#if manager}} {{> navbar_manager}} {{else}} {{#if salesman}} {{> navbar_salesman}} {{else}}
+    {{#if customer}} {{> navbar_guest}} {{else}} {{> navbar_default}} {{/if}} {{/if}} {{/if}} {{/if}} {{{body}}} {{#if login_page}}
+    {{else}} {{#if cart_page}} {{else}} {{> brand_slide}} {{/if}} {{> footer}} {{/if}}
 
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> 
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
   <script src="/plugins/greensock/TweenMax.min.js"></script>
   <script src="/plugins/greensock/TimelineMax.min.js"></script>
   <script src="/plugins/scrollmagic/ScrollMagic.min.js"></script>
@@ -106,23 +94,17 @@
   <script src="/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
   <script src="/plugins/parallax-js-master/parallax.min.js"></script>
   <script src="/plugins/slick-1.8.0/slick.js"></script>
-  
+
   {{#if homepage}}
   <script src="/js/custom.js"></script>
+  {{/if}} {{#if cart_page}}
+  <script src="/js/cart_custom.js"></script>
+  {{/if}} {{#if shop_page}}
+  <script src="/js/shop_custom.js"></script>
+  {{/if}} {{#if product_page}}
+  <script src="/js/product_custom.js"></script>
   {{/if}}
 
-  {{#if cart_page}}
-  <script src="/js/cart_custom.js"></script> 
-  {{/if}} 
-
-  {{#if shop_page}}
-  <script src="/js/shop_custom.js"></script> 
-  {{/if}} 
-
-  {{#if product_page}}
-  <script src="/js/product_custom.js"></script>
-  {{/if}}  
-  
 </body>
 
 </html>
