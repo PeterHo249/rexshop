@@ -1,0 +1,50 @@
+<div class="edit_page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h2 style="color:#069" class="page-title">Edit order</h2>
+                        <br>
+                        <a href="/salesman/order" class="btn btn-primary">Back to all orders</a>
+                        <br><br>
+
+                        <form method="post" action="/salesman/order/update/{{order_item._id}}">
+                            <table id="mytable" class="table table-bordred table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Customer ID</td>
+                                        <td><input type="text" name="customer_id" value="{{order_item.customer_id}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cost</td>
+                                        <td><input type="text" name="cost" value="{{order_item.cost}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date</td>
+                                        <td><input type="text" name="date" value="{{order_item.date}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                    <td>
+                                        <select name="select_picker">
+                                            <option value="Done">Done</option>
+                                            <option value="Waiting">Waiting</option>
+                                            <option value="Processing">Processing</option>
+                                        </select>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Count</td>
+                                        <td><input type="text" name="count" value="{{order_item.count}}" /></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><button class="btn btn-primary" type="submit">Update</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

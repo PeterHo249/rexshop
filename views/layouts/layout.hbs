@@ -3,19 +3,6 @@
 <html lang="en">
 
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121080327-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-121080327-1');
-  </script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -36,6 +23,18 @@
 <html>
 
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121080327-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121080327-1');
+  </script>
   <title>{{title}}</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -73,9 +72,33 @@
 <body>
   <div class="super_container">
 
-    {{#if login_page}} {{else}} {{#if manager}} {{> navbar_manager}} {{else}} {{#if salesman}} {{> navbar_salesman}} {{else}}
-    {{#if customer}} {{> navbar_guest}} {{else}} {{> navbar_default}} {{/if}} {{/if}} {{/if}} {{/if}} {{{body}}} {{#if login_page}}
-    {{else}} {{#if cart_page}} {{else}} {{> brand_slide}} {{/if}} {{> footer}} {{/if}}
+    {{#if login_page}} 
+    {{else}} 
+      {{#if manager}} 
+        {{> navbar_manager}} 
+      {{else}} 
+        {{#if salesman}} 
+          {{> navbar_salesman}} 
+        {{else}}
+          {{#if customer}} 
+            {{> navbar_guest}} 
+          {{else}} 
+            {{> navbar_default}} 
+          {{/if}} 
+        {{/if}} 
+      {{/if}} 
+    {{/if}} 
+    
+    {{{body}}} 
+    
+    {{#if login_page}}
+    {{else}} 
+      {{#if cart_page}} 
+      {{else}} 
+        {{> brand_slide}} 
+      {{/if}} 
+      {{> footer}} 
+    {{/if}}
 
   </div>
 
@@ -97,13 +120,20 @@
 
   {{#if homepage}}
   <script src="/js/custom.js"></script>
-  {{/if}} {{#if cart_page}}
+  {{/if}} 
+  
+  {{#if cart_page}}
   <script src="/js/cart_custom.js"></script>
-  {{/if}} {{#if shop_page}}
+  {{/if}} 
+  
+  {{#if shop_page}}
   <script src="/js/shop_custom.js"></script>
-  {{/if}} {{#if product_page}}
+  {{/if}} 
+  
+  {{#if product_page}}
   <script src="/js/product_custom.js"></script>
   {{/if}}
+
 
 </body>
 
