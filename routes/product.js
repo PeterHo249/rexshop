@@ -13,13 +13,15 @@ module.exports = function (app, passport) {
     app.get('/product', product_controller.product_home);
 
     // GET product catagories
-    app.get('/product/cate/:category', product_controller.product_category_get);
+    app.get('/product/page/:page/cate/:category', product_controller.product_category_get);
 
     // GET product category and brand
-    app.get('/product/cate/:category/brand/:brand', product_controller.product_brand_get);
+    app.get('/product/page/:page/cate/:category/brand/:brand', product_controller.product_brand_get);
 
     // GET product detail
     app.get('/product/item/:id', product_controller.product_detail_get);
 
-    app.post('/product/cart/add', auth.isLoggedIn, product_controller.add_item_cart);
+    app.post('/product/cart/add', auth.isLoggedIn('customer'), product_controller.add_item_cart);
+
+    app.get('/search', product_controller.search_get);
 };

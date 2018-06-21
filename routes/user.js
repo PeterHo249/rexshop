@@ -13,7 +13,7 @@ const {
 
 module.exports = function (app, passport) {
   /* GET users listing. */
-  app.get('/profile', auth.isLoggedIn, function (req, res, next) {
+  app.get('/profile', auth.isLoggedIn('*'), function (req, res, next) {
     let cart_info = {
       cartid: '',
       userid: '',
@@ -36,14 +36,14 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/changepassword', auth.isLoggedIn, function (req, res) {
+  app.get('/changepassword', auth.isLoggedIn('*'), function (req, res) {
     res.render('changepassword', {
       login_page: true,
       error_message: req.flash('changePasswordMessage')
     });
   });
 
-  app.post('/changepassword', auth.isLoggedIn, function (req, res) {
+  app.post('/changepassword', auth.isLoggedIn('*'), function (req, res) {
     async.waterfall([
         function (done) {
           let errors = [];
@@ -101,7 +101,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.get('/changeprofile', auth.isLoggedIn, function (req, res) {
+  app.get('/changeprofile', auth.isLoggedIn('*'), function (req, res) {
     res.render('changeprofile', {
       login_page: true,
       error_message: req.flash('changeProfileMessage'),
@@ -109,7 +109,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/changeprofile', auth.isLoggedIn, function (req, res) {
+  app.post('/changeprofile', auth.isLoggedIn('*'), function (req, res) {
     req.checkBody('fullname', 'Fullname is required.').notEmpty();
     req.checkBody('email', 'Valid is mail is required.').isEmail();
     req.checkBody('address', 'Address is required.').notEmpty();

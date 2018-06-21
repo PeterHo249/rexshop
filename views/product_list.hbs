@@ -24,31 +24,31 @@
                         <div class="sidebar_title">Categories</div>
                         <ul class="sidebar_categories">
                             <li>
-                                <a href="/product/cate/dslr">DSLR Camera</a>
+                                <a href="/product/page/1/cate/dslr">DSLR Camera</a>
                             </li>
                             <li>
-                                <a href="/product/cate/mirrorless">Mirrorless Camera</a>
+                                <a href="/product/page/1/cate/mirrorless">Mirrorless Camera</a>
                             </li>
                             <li>
-                                <a href="/product/cate/compact">Compact Camera</a>
+                                <a href="/product/page/1/cate/compact">Compact Camera</a>
                             </li>
                             <li>
-                                <a href="/product/cate/action">Action Camera</a>
+                                <a href="/product/page/1/cate/action">Action Camera</a>
                             </li>
                             <li>
-                                <a href="/product/cate/len">Camera Lens</a>
+                                <a href="/product/page/1/cate/len">Camera Lens</a>
                             </li>
                             <li>
-                                <a href="/product/cate/battery">Battery</a>
+                                <a href="/product/page/1/cate/battery">Battery</a>
                             </li>
                             <li>
-                                <a href="/product/cate/card">Memory Card</a>
+                                <a href="/product/page/1/cate/card">Memory Card</a>
                             </li>
                             <li>
-                                <a href="/product/cate/tripod">Tripod</a>
+                                <a href="/product/page/1/cate/tripod">Tripod</a>
                             </li>
                             <li>
-                                <a href="/product/cate/backpack">Backpack</a>
+                                <a href="/product/page/1/cate/backpack">Backpack</a>
                             </li>
                         </ul>
                     </div>
@@ -61,25 +61,25 @@
                             <div class="sidebar_subtitle brands_subtitle">Brands</div>
                             <ul class="brands_list">
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/nikon">Nikon</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/nikon">Nikon</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/canon">Canon</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/canon">Canon</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/fujifilm">Fujifilm</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/fujifilm">Fujifilm</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/pentax">Pentax</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/pentax">Pentax</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/sony">Sony</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/sony">Sony</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/gopro">GoPro</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/gopro">GoPro</a>
                                 </li>
                                 <li class="brand">
-                                    <a href="/product/cate/{{current_cate}}/brand/leica">Leica</a>
+                                    <a href="/product/page/1/cate/{{current_cate}}/brand/leica">Leica</a>
                                 </li>
                             </ul>
                         </div>
@@ -123,6 +123,18 @@
 
                     </div>
 
+                    <!-- Shop Page Navigation -->
+                    {{#if page}}
+						<div class="shop_page_nav d-flex flex-row">
+							<div class="page_prev d-flex flex-column align-items-center justify-content-center"><a href="/product/page/{{prev_page}}/cate/{{current_cate}}{{#if current_brand}}/brand/{{current_brand}}{{/if}}"><i class="fas fa-chevron-left"></i></a></div>
+							<ul class="page_nav d-flex flex-row">
+                                {{#each page_list}}
+								<li><a href="/product/page/{{value}}/cate/{{../current_cate}}{{#if has_brand}}/brand/{{../current_brand}}{{/if}}">{{value}}</a></li>
+								{{/each}}
+							</ul>
+							<div class="page_next d-flex flex-column align-items-center justify-content-center"><a href="/product/page/{{next_page}}/cate/{{current_cate}}{{#if current_brand}}/brand/{{current_brand}}{{/if}}"><i class="fas fa-chevron-right"></i></a></div>
+						</div>
+                    {{/if}}
                 </div>
 
             </div>

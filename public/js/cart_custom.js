@@ -71,6 +71,7 @@ $(document).ready(function () {
 	function initCustomDropdown() {
 		if ($('.custom_dropdown_placeholder').length && $('.custom_list').length) {
 			var placeholder = $('.custom_dropdown_placeholder');
+			var cate_input = $('.searchcate');
 			var list = $('.custom_list');
 		}
 
@@ -96,6 +97,8 @@ $(document).ready(function () {
 			var index = $(this).parent().index();
 
 			placeholder.text($(this).text()).css('opacity', '1');
+			var ref_array = ['all', 'dslr', 'mirrorless', 'compact', 'action', 'len', 'accessory']
+			cate_input.val(ref_array[index]);
 
 			if (list.hasClass('active')) {
 				list.removeClass('active');

@@ -57,11 +57,12 @@
                     <div class="header_search">
                         <div class="header_search_content">
                             <div class="header_search_form_container">
-                                <form action="#" class="header_search_form clearfix">
-                                    <input type="search" required="required" class="header_search_input" placeholder="Search for products...">
+                                <form action="/search" class="header_search_form clearfix" method="GET">
+                                    <input type="search" name="searchstring" required="required" class="header_search_input" placeholder="Search for products...">
                                     <div class="custom_dropdown">
                                         <div class="custom_dropdown_list">
                                             <span class="custom_dropdown_placeholder clc">All Categories</span>
+                                            <input type="hidden" name="searchcate" value="all" class="searchcate">
                                             <i class="fas fa-chevron-down"></i>
                                             <ul class="custom_list clc">
                                                 <li>
@@ -147,53 +148,53 @@
 
                             <ul class="cat_menu">
                                 <li>
-                                    <a href="/product/cate/dslr">DSLR Camera
+                                    <a href="/product/page/1/cate/dslr">DSLR Camera
                                         <i class="fas fa-chevron-right ml-auto"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/product/cate/mirrorless">Mirrorless Camera
+                                    <a href="/product/page/1/cate/mirrorless">Mirrorless Camera
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/product/cate/compact">Compact Camera
+                                    <a href="/product/page/1/cate/compact">Compact Camera
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="/product/cate/action">Action Camera
+                                    <a href="/product/page/1/cate/action">Action Camera
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/product/cate/len">Camera Lens
+                                    <a href="/product/page/1/cate/len">Camera Lens
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                 </li>
                                 <li class="hassubs">
-                                    <a href="/product/cate/accessory">Accessories
+                                    <a href="/product/page/1/cate/accessory">Accessories
                                         <i class="fas fa-chevron-right"></i>
                                     </a>
                                     <ul>
                                         <li>
-                                            <a href="/product/cate/battery">Battery
+                                            <a href="/product/page/1/cate/battery">Battery
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/product/cate/tripod">Tripod
+                                            <a href="/product/page/1/cate/tripod">Tripod
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/product/cate/card">Memory Card
+                                            <a href="/product/page/1/cate/card">Memory Card
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/product/cate/backpack">Backpack
+                                            <a href="/product/page/1/cate/backpack">Backpack
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
