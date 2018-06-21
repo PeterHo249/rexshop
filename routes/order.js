@@ -1,6 +1,5 @@
 let express = require('express');
 let router = express.Router();
-let auth = require('../config/auth');
 // Require controller module
 var order_controller = require('../controllers/orderController');
 

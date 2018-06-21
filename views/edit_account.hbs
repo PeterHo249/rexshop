@@ -1,0 +1,64 @@
+<div class="edit_account_page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h2 style="color:#069" class="page-title">Edit Account</h2>
+                        <br>
+                        <a href="/admin/manage_account" class="btn btn-primary">Back to all accounts</a>
+                        <br><br>
+
+                        <form method="post" action="/admin/manage_account/update/{{item._id}}">
+                            <table id="mytable" class="table table-bordred table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td><input type="text" name="name" value="{{item.name}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td><input type="text" name="address" value="{{item.address}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone Num.</td>
+                                        <td><input type="text" name="phone" value="{{item.phone_number}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Role</td>
+                                    <td>
+                                        <select name="select_picker">
+                                            <option value="guest">Guest</option>
+                                            <option value="salesman">Salesman</option>
+                                            <option value="customer">Customer</option>
+                                        </select>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Username</td>
+                                        <td><input type="text" name="username"  value="{{item.username}}" /></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Password</td>
+                                        <td><input type="text" name="password"  value="{{item.password}}" /></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Email</td>
+                                        <td><input type="text" name="password"  value="{{item.email}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Verified</td>
+                                        <td><input type="text" name="password"   value="{{item.verified}}" /></td>
+                                    </tr>
+
+                                    
+                                </tbody>
+                            </table>
+                            <tr>
+                                        <td><button class="btn btn-primary" type="submit">Update</button></td>
+                                    </tr>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

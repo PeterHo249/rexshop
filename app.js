@@ -8,9 +8,9 @@ var expressHbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var validator = require('express-validator');
 var mailer = require('express-mailer');
-var OrderRouter = require('./routes/order');
 var app = express();
 
+let User = require('./models/user');
 let Order = require('./models/order');
 let Product = require('./models/product');
 //Set up mongoose connection
@@ -173,6 +173,66 @@ app.post('/salesman/order/save', function(req, res) {
     });
 });
 
+
+//Set up route for admin
+
+app.get('/admin', function(req, res) {
+    res.render('index_admin', { admin: true, title: 'RexShop' });
+});
+
+app.get('/admin/manage_account', function(req, res) {
+    User.find({}).exec(function(err, users) {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            res.render('account_table', { items: users, title: 'RexShop', admin: true });
+        }
+    });
+});
+
+app.get('/admin/manage_account/:id', function(req, res) {
+    User.findById(req.params.id).exec(function(err, user) {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            res.render('show_account_detail', { item: user, title: 'RexShop', admin: true });
+        }
+    });
+});
+
+app.get('/admin/manage_account/edit/:id', function(req, res) {
+    User.findOne({ _id: req.params.id }).exec(function(err, user) {
+        if (err) {
+            return next(err);
+        } else {
+            res.render('edit_account', { item: user, title: 'RexShop', admin: true })
+        }
+    });
+});
+
+app.post('/admin/manage_account/update/:id', function(req, res) {
+    var name = req.body.name;
+    var address = req.body.address;
+    var phone = req.body.phone;
+    var role = req.body.select_picker;
+    var email = req.body.email;
+    User.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: {
+            name: name,
+            address: address,
+            phone_number: phone,
+            role: role,
+            email: email
+        }
+    }, { new: false }, function(err, user) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.redirect("/admin/manage_account/" + user._id);
+    });
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
@@ -190,3 +250,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+x
