@@ -387,23 +387,32 @@ exports.product_brand_get = function (req, res) {
 };
 
 exports.product_detail_get = function (req, res) {
-    async.parallel({
-        product: function (callback) {
-            Product.findById(req.params.id)
-                .exec(callback);
+    async.waterfall([
+        function (done) {
+            Product.findById(req.params.id, function(err, product) {
+                done(err, product);
+            })
+                
+        },
+        function (product, done) {
+            console.log(product);
+            Product.findRandom({ type: product.type }, {}, {limit: 6}, function (err, relateds) {
+                done(err, product, relateds);
+            });
         }
-    }, function (err, results) {
+    ], function (err, product, relateds) {
         if (err) {
-            return next(err);
+            console.log(err);
+            return err;
         }
-        if (results.product == null) {
+        if (product == null) {
             let err = new Error('Product not found');
             err.status = 404;
-            return next(err);
+            return err;
         }
 
         let category_name = '';
-        switch (results.product.type) {
+        switch (product.type) {
             case 'camera/dslr':
                 category_name = 'DSLR Cameras';
                 break;
@@ -452,18 +461,20 @@ exports.product_detail_get = function (req, res) {
             res.render('single_product', {
                 title: 'RexShop',
                 category_name: category_name,
-                item: results.product,
+                item: product,
                 product_page: true,
                 customer: true,
                 user: req.user,
-                cart: cart_info
+                cart: cart_info,
+                relateds: relateds
             });
         } else {
             res.render('single_product', {
                 title: 'RexShop',
                 category_name: category_name,
-                item: results.product,
-                product_page: true
+                item: product,
+                product_page: true,
+                relateds: relateds
             });
         }
     });
