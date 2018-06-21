@@ -15,7 +15,7 @@
 										<div class="cart_item_name">
 											<div class="cart_item_title">Delivery Address:</div>
 											<div class="cart_item_text">
-												<input type="text" name="deliveryaddress" form="checkout-form" required="required" value="{{user.address}}" style="width: 100%;">
+												<input type="text" name="deliveryaddress" form="checkout-form" required="required" value="{{address}}" style="width: 100%;">
 											</div>
 										</div>
 									</div>
@@ -58,6 +58,7 @@
 							</div>
 						</div>
 
+						{{#if is_shopping}}
 						<div class="cart_buttons">
 							<form action="/clearcart" method="post" class="d-inline">
 								<input type="hidden" name="cartid" value="{{cart.cartid}}">
@@ -68,6 +69,7 @@
 							    <button type="submit" class="button cart_button_checkout">Payment</button>
 							</form>
 						</div>
+						{{/if}}
 						{{else}}
 						<div class="cart_title">Nothing in your cart!</div>
 						{{/unless}}

@@ -7,6 +7,7 @@ let jsontoken = require('../config/jsontoken');
 let async = require('async');
 let crypto = require('crypto');
 let bcrypt = require('bcrypt-nodejs');
+let moment = require('moment');
 
 module.exports = function(app, passport) {
     /* GET home page. */
@@ -275,8 +276,10 @@ module.exports = function(app, passport) {
 
     app.get('/cart/:id', auth.isLoggedIn('customer'), function(req, res) {
         let item_list = [];
+        let is_shopping = false;
         let func_count = 0;
         let exec_times = 0;
+        let address = '';
         async.waterfall([
             function(callback) {
                 Order.findById(req.params.id.toString())
@@ -285,7 +288,16 @@ module.exports = function(app, passport) {
                             console.log(error);
                             return;
                         }
-                        console.log(cart);
+                        if (cart.status === 'Waiting') {
+                            is_shopping = true;
+                        } else {
+                            is_shopping = false;
+                        }
+                        if (cart.address === '' || cart.address === undefined) {
+                            address = req.user.address;
+                        } else {
+                            address = cart.address;
+                        }
                         func_count = cart.item_list.length;
                         cart.item_list.forEach(function(item_in_list) {
                             let item = {
@@ -318,8 +330,10 @@ module.exports = function(app, passport) {
                 cart_page: true,
                 customer: true,
                 user: req.user,
+                address: address,
                 item: item_list,
-                cart: cart_info
+                cart: cart_info,
+                is_shopping: is_shopping
             });
         });
 
@@ -364,6 +378,59 @@ module.exports = function(app, passport) {
                     res.clearCookie('carttoken');
                     res.redirect('/');
                 }
+            });
+        });
+    });
+
+    app.get('/shoppinghistory', auth.isLoggedIn('customer'), function(req, res) {
+        async.parallel({
+            order_list: function(callback) {
+                Order.find({customer_id: req.user._id})
+                .exec(callback);
+            }
+        }, function(err, results) {
+            if (err) {
+                console.log(err);
+                return err;
+            }
+
+            if (results.order_list === null) {
+                let err = new Error('Product not found');
+                err.status = 404;
+                return err;
+            }
+
+            let is_blank = false;
+            if (results.order_list.length === 0) {
+                is_blank = true;
+            } else {
+                for (let i = 0; i < results.order_list.length; i++) {
+                    results.order_list[i].formated_date = moment(results.order_list[i].date).format('DD-MM-YYYY');
+                }
+            }
+
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                if (temp.userid.toString() === req.user._id.toString()) {
+                    cart_info = temp;
+                }
+            }
+
+            res.render('shophistory', {
+                title: 'RexShop',
+                customer: true,
+                cart_page: true,
+                user: req.user,
+                cart: cart_info,
+                order_list: results.order_list,
+                is_blank: is_blank
             });
         });
     });

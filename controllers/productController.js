@@ -391,7 +391,7 @@ exports.product_detail_get = function (req, res) {
         function (done) {
             Product.findById(req.params.id, function(err, product) {
                 done(err, product);
-            })
+            });
                 
         },
         function (product, done) {
@@ -739,5 +739,5 @@ exports.search_get = function (req, res) {
                     shop_page: true
                 });
             }
-        })
-}
+        });
+};
