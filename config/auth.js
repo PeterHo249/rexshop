@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-exports.isLoggedIn = function (role) {
+exports.is_logged_in = function (role) {
   return function (req, res, next) {
     if (req.isAuthenticated()) {
       if (req.user.role === role || role === '*') {

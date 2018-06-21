@@ -65,8 +65,8 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    app.get('/verify', auth.isLoggedIn('*'), function(req, res) {
-        let mailOptions = {
+    app.get('/verify', auth.is_logged_in('*'), function(req, res) {
+        let mail_options = {
             to: req.user.email,
             subject: 'Verification Email',
             user: {
@@ -74,7 +74,7 @@ module.exports = function(app, passport) {
             },
             email: true
         };
-        app.mailer.send('emailverify', mailOptions, function(err, message) {
+        app.mailer.send('emailverify', mail_options, function(err, message) {
             if (err) {
                 console.log(err);
             } else {
@@ -87,7 +87,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/verify', auth.isLoggedIn('*'), function(req, res) {
+    app.post('/verify', auth.is_logged_in('*'), function(req, res) {
         if (req.user.code === req.body.code) {
             User.findByIdAndUpdate(req.user._id, {
                 $set: {
@@ -140,8 +140,8 @@ module.exports = function(app, passport) {
                             return res.redirect('/login');
                         }
 
-                        user.resetPasswordToken = token;
-                        user.resetPasswordExpires = Date.now() + 3600000;
+                        user.reset_password_token = token;
+                        user.reset_password_Expires = Date.now() + 3600000;
 
                         user.save(function(err) {
                             done(err, token, user);
@@ -149,14 +149,14 @@ module.exports = function(app, passport) {
                     });
                 },
                 function(token, user, done) {
-                    let mailOptions = {
+                    let mail_options = {
                         to: user.email,
                         subject: 'Reset Password Email',
                         host: req.headers.host,
                         token: token,
                         email: true
                     };
-                    app.mailer.send('emailforgot', mailOptions, function(err, message) {
+                    app.mailer.send('emailforgot', mail_options, function(err, message) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -175,10 +175,10 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
+    app.get('/reset/:token', auth.is_logged_in('*'), function(req, res) {
         User.findOne({
-            resetPasswordToken: req.params.token,
-            resetPasswordExpires: {
+            reset_password_token: req.params.token,
+            reset_password_Expires: {
                 $gt: Date.now()
             }
         }, function(err, user) {
@@ -196,12 +196,15 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
+    app.post('/reset/:token', auth.is_logged_in('*'), function(req, res) {
         async.waterfall([
                 function(done) {
                     let errors = [];
                     if (req.body.password === undefined || req.body.password.length == 0) {
                         errors.push('New password is required.');
+                    }
+                    if (req.body.password.length < 8 || req.body.password.length > 32) {
+                        errors.push('Password must have 8 - 32 letters.');
                     }
                     if (req.body.password !== req.body.repassword) {
                         errors.push('New password and re-enter password have to be the same.');
@@ -216,8 +219,8 @@ module.exports = function(app, passport) {
                     }
 
                     User.findOne({
-                        resetPasswordToken: req.params.token,
-                        resetPasswordExpires: {
+                        reset_password_token: req.params.token,
+                        reset_password_Expires: {
                             $gt: Date.now()
                         }
                     }, function(err, user) {
@@ -227,8 +230,8 @@ module.exports = function(app, passport) {
                         }
 
                         user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
-                        user.resetPasswordToken = undefined;
-                        user.resetPasswordExpires = undefined;
+                        user.reset_password_token = undefined;
+                        user.reset_password_Expires = undefined;
 
                         user.save(function(err) {
                             req.logIn(user, function(err) {
@@ -238,12 +241,12 @@ module.exports = function(app, passport) {
                     });
                 },
                 function(user, done) {
-                    let mailOptions = {
+                    let mail_options = {
                         to: user.email,
                         subject: 'Confirmation Reset Password Email',
                         email: true
                     };
-                    app.mailer.send('emailreset', mailOptions, function(err, message) {
+                    app.mailer.send('emailreset', mail_options, function(err, message) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -257,7 +260,7 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/cart', auth.isLoggedIn('customer'), function(req, res) {
+    app.get('/cart', auth.is_logged_in('customer'), function(req, res) {
         let cart_info = {
             cartid: '',
             userid: '',
@@ -274,7 +277,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.get('/cart/:id', auth.isLoggedIn('customer'), function(req, res) {
+    app.get('/cart/:id', auth.is_logged_in('customer'), function(req, res) {
         let item_list = [];
         let is_shopping = false;
         let func_count = 0;
@@ -325,7 +328,7 @@ module.exports = function(app, passport) {
                     });
             }
         ], function() {
-            let cart_info = jsontoken.decodeToken(req.cookies.carttoken);
+            let cart_info = jsontoken.decode_token(req.cookies.carttoken);
             res.render('cart', {
                 cart_page: true,
                 customer: true,
@@ -339,7 +342,7 @@ module.exports = function(app, passport) {
 
     });
 
-    app.post('/clearcart', auth.isLoggedIn('customer'), function(req, res) {
+    app.post('/clearcart', auth.is_logged_in('customer'), function(req, res) {
         Order.findByIdAndRemove(req.body.cartid, function(err) {
             if (err) {
                 console.log(err);
@@ -351,7 +354,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/checkoutcart', auth.isLoggedIn('customer'), function(req, res) {
+    app.post('/checkoutcart', auth.is_logged_in('customer'), function(req, res) {
         Order.findByIdAndUpdate(req.body.cartid, {
             $set: {
                 status: 'Processing',
@@ -365,12 +368,12 @@ module.exports = function(app, passport) {
                 return;
             }
 
-            let mailOptions = {
+            let mail_options = {
                 to: req.user.email,
                 subject: 'Confirm Checkout Cart Email',
                 email: true
             };
-            app.mailer.send('emailcheckoutcart', mailOptions, function(err, message) {
+            app.mailer.send('emailcheckoutcart', mail_options, function(err, message) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -382,7 +385,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.get('/shoppinghistory', auth.isLoggedIn('customer'), function(req, res) {
+    app.get('/shoppinghistory', auth.is_logged_in('customer'), function(req, res) {
         async.parallel({
             order_list: function(callback) {
                 Order.find({customer_id: req.user._id})
@@ -417,7 +420,7 @@ module.exports = function(app, passport) {
             };
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
                 if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }

@@ -1,10 +1,8 @@
 /* jshint esversion: 6 */
 var express = require('express');
-var router = express.Router();
 var auth = require('../config/auth');
 var User = require('../models/user');
 var async = require('async');
-var bcrypt = require('bcrypt-nodejs');
 let jsontoken = require('../config/jsontoken');
 const {
   check,
@@ -13,7 +11,7 @@ const {
 
 module.exports = function (app, passport) {
   /* GET users listing. */
-  app.get('/profile', auth.isLoggedIn('*'), function (req, res, next) {
+  app.get('/profile', auth.is_logged_in('*'), function (req, res) {
     let cart_info = {
       cartid: '',
       userid: '',
@@ -22,7 +20,7 @@ module.exports = function (app, passport) {
     };
 
     if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-      let temp = jsontoken.decodeToken(req.cookies.carttoken);
+      let temp = jsontoken.decode_token(req.cookies.carttoken);
       if (temp.userid.toString() === req.user._id.toString()) {
         cart_info = temp;
       }
@@ -36,14 +34,14 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/changepassword', auth.isLoggedIn('*'), function (req, res) {
+  app.get('/changepassword', auth.is_logged_in('*'), function (req, res) {
     res.render('changepassword', {
       login_page: true,
       error_message: req.flash('changePasswordMessage')
     });
   });
 
-  app.post('/changepassword', auth.isLoggedIn('*'), function (req, res) {
+  app.post('/changepassword', auth.is_logged_in('*'), function (req, res) {
     async.waterfall([
         function (done) {
           let errors = [];
@@ -67,25 +65,25 @@ module.exports = function (app, passport) {
           }
 
           User.findById(req.user._id, function (err, user) {
-            if (!user.validPassword(req.body.currentpass)) {
+            if (!user.is_valid_password(req.body.currentpass)) {
               req.flash('changePasswordMessage', 'Current password is not match.');
               console.log('=====> Error in change password');
               return res.redirect('back');
             }
-            user.password = user.generateHash(req.body.newpass);
+            user.password = user.generate_hash(req.body.newpass);
             user.save(function (err) {
               done(err, user);
             });
           });
         },
         function (user, done) {
-          let mailOptions = {
+          let mail_options = {
             to: user.email,
             subject: 'Change Password Email',
             user: user,
             email: true
           };
-          app.mailer.send('emailchange', mailOptions, function (err, message) {
+          app.mailer.send('emailchange', mail_options, function (err, message) {
             if (err) {
               console.log(err);
             } else {
@@ -101,7 +99,7 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.get('/changeprofile', auth.isLoggedIn('*'), function (req, res) {
+  app.get('/changeprofile', auth.is_logged_in('*'), function (req, res) {
     res.render('changeprofile', {
       login_page: true,
       error_message: req.flash('changeProfileMessage'),
@@ -109,7 +107,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.post('/changeprofile', auth.isLoggedIn('*'), function (req, res) {
+  app.post('/changeprofile', auth.is_logged_in('*'), function (req, res) {
     req.checkBody('fullname', 'Fullname is required.').notEmpty();
     req.checkBody('email', 'Valid is mail is required.').isEmail();
     req.checkBody('address', 'Address is required.').notEmpty();

@@ -45,15 +45,15 @@ var UserSchema = new Schema({
     code: {
         type: String
     },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date
+    reset_password_token: String,
+    reset_password_Expires: Date
 });
 
-UserSchema.methods.generateHash = function(password) {
+UserSchema.methods.generate_hash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-UserSchema.methods.validPassword = function(password) {
+UserSchema.methods.is_valid_password = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 

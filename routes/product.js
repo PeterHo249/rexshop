@@ -10,18 +10,18 @@ module.exports = function (app, passport) {
     /// PRODUCT ROUTE ///
 
     // GET homepage
-    app.get('/product', product_controller.product_home);
+    app.get('/product', product_controller.get_home);
 
     // GET product catagories
-    app.get('/product/page/:page/cate/:category', product_controller.product_category_get);
+    app.get('/product/page/:page/cate/:category', product_controller.get_product_category);
 
     // GET product category and brand
-    app.get('/product/page/:page/cate/:category/brand/:brand', product_controller.product_brand_get);
+    app.get('/product/page/:page/cate/:category/brand/:brand', product_controller.get_product_brand);
 
     // GET product detail
-    app.get('/product/item/:id', product_controller.product_detail_get);
+    app.get('/product/item/:id', product_controller.get_product_detail);
 
-    app.post('/product/cart/add', auth.isLoggedIn('customer'), product_controller.add_item_cart);
+    app.post('/product/cart/add', auth.is_logged_in('customer'), product_controller.add_item_cart);
 
-    app.get('/search', product_controller.search_get);
+    app.get('/search', product_controller.search_product);
 };

@@ -7,7 +7,7 @@ let jsontoken = require('../config/jsontoken');
 
 const item_per_page = 24;
 // MARK - Need some test in this
-exports.product_home = function (req, res) {
+exports.get_home = function (req, res) {
     async.parallel({
         new_items: function (callback) {
             Product.findRandom({}, {}, {
@@ -43,7 +43,7 @@ exports.product_home = function (req, res) {
             };
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
                 if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
@@ -70,10 +70,10 @@ exports.product_home = function (req, res) {
     });
 };
 
-exports.product_category_get = function (req, res) {
+exports.get_product_category = function (req, res) {
     let category_type = '';
     let category_title = '';
-    let isFilter = true;
+    let is_filter = true;
 
     switch (req.params.category) {
         case 'dslr':
@@ -95,32 +95,32 @@ exports.product_category_get = function (req, res) {
         case 'len':
             category_type = 'camera/len';
             category_title = 'Camera Lens';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'tripod':
             category_type = 'accessory/tripod';
             category_title = 'Tripods';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'battery':
             category_type = 'accessory/battery';
             category_title = 'Batteries';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'card':
             category_type = 'accessory/card';
             category_title = 'Memory Cards';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'backpack':
             category_type = 'accessory/backpack';
             category_title = 'Backpacks';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'accessory':
             category_title = 'Accessories';
             category_type = new RegExp('^asseccory', 'i');
-            isFilter = false;
+            is_filter = false;
             break;
         default:
             break;
@@ -172,7 +172,7 @@ exports.product_category_get = function (req, res) {
             };
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
                 if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
@@ -188,7 +188,7 @@ exports.product_category_get = function (req, res) {
                 next_page: next_page,
                 prev_page: prev_page,
                 page_list: page_array,
-                is_filter: isFilter,
+                is_filter: is_filter,
                 shop_page: true,
                 customer: true,
                 user: req.user,
@@ -205,7 +205,7 @@ exports.product_category_get = function (req, res) {
                 next_page: next_page,
                 prev_page: prev_page,
                 page_list: page_array,
-                is_filter: isFilter,
+                is_filter: is_filter,
                 shop_page: true,
                 page: true
             });
@@ -213,11 +213,11 @@ exports.product_category_get = function (req, res) {
     });
 };
 
-exports.product_brand_get = function (req, res) {
+exports.get_product_brand = function (req, res) {
     let category_type = '';
     let category_title = '';
     let brand_name = '';
-    let isFilter = true;
+    let is_filter = true;
 
     switch (req.params.category) {
         case 'dslr':
@@ -239,32 +239,32 @@ exports.product_brand_get = function (req, res) {
         case 'len':
             category_type = 'camera/len';
             category_title = 'Camera Lens';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'tripod':
             category_type = 'accessory/tripod';
             category_title = 'Tripods';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'battery':
             category_type = 'accessory/battery';
             category_title = 'Batteries';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'card':
             category_type = 'accessory/card';
             category_title = 'Memory Cards';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'backpack':
             category_type = 'accessory/backpack';
             category_title = 'Backpacks';
-            isFilter = false;
+            is_filter = false;
             break;
         case 'accessory':
             category_title = 'Accessories';
             category_type = new RegExp('^asseccory', 'i');
-            isFilter = false;
+            is_filter = false;
             break;
         default:
             break;
@@ -344,7 +344,7 @@ exports.product_brand_get = function (req, res) {
             };
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
                 if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
@@ -360,7 +360,7 @@ exports.product_brand_get = function (req, res) {
                 next_page: next_page,
                 prev_page: prev_page,
                 page_list: page_array,
-                is_filter: isFilter,
+                is_filter: is_filter,
                 shop_page: true,
                 customer: true,
                 user: req.user,
@@ -378,7 +378,7 @@ exports.product_brand_get = function (req, res) {
                 next_page: next_page,
                 prev_page: prev_page,
                 page_list: page_array,
-                is_filter: isFilter,
+                is_filter: is_filter,
                 shop_page: true,
                 page: true
             });
@@ -386,7 +386,7 @@ exports.product_brand_get = function (req, res) {
     });
 };
 
-exports.product_detail_get = function (req, res) {
+exports.get_product_detail = function (req, res) {
     async.waterfall([
         function (done) {
             Product.findById(req.params.id, function(err, product) {
@@ -452,7 +452,7 @@ exports.product_detail_get = function (req, res) {
             };
 
             if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
                 if (temp.userid.toString() === req.user._id.toString()) {
                     cart_info = temp;
                 }
@@ -491,7 +491,7 @@ exports.add_item_cart = function (req, res) {
         // Already have order
         console.log('---------> valid cart token');
         // parse JSON token to object
-        cart_info = jsontoken.decodeToken(req.cookies.carttoken);
+        cart_info = jsontoken.decode_token(req.cookies.carttoken);
         // check valid cart
         let req_id = req.user._id.toString();
         let cart_user_id = cart_info.userid.toString();
@@ -510,9 +510,6 @@ exports.add_item_cart = function (req, res) {
 
                 cart_info.count = cart_info.count + parseInt(req.body.itemquantity);
                 cart_info.cost = cart_info.cost + (req.body.itemquantity * req.body.itemprice);
-                console.log('------------------------>');
-                console.log(cart_info);
-                console.log('<------------------------');
                 cart.cost = cart_info.cost;
                 cart.count = cart_info.count;
                 cart.item_list.push({
@@ -526,7 +523,7 @@ exports.add_item_cart = function (req, res) {
                 });
 
                 // encode cart_info to JSON token
-                let cookiestring = jsontoken.generateToken(cart_info);
+                let cookiestring = jsontoken.generate_token(cart_info);
                 res.cookie('carttoken', cookiestring, {
                     maxAge: 1000 * 60 * 60,
                     httpOnly: true
@@ -564,7 +561,7 @@ exports.add_item_cart = function (req, res) {
             });
 
             // encode cart_info to JSON token
-            let cookiestring = jsontoken.generateToken(cart_info);
+            let cookiestring = jsontoken.generate_token(cart_info);
             res.cookie('carttoken', cookiestring, {
                 maxAge: 1000 * 60 * 60,
                 httpOnly: true
@@ -603,7 +600,7 @@ exports.add_item_cart = function (req, res) {
         });
 
         // encode cart_info to JSON token
-        let cookiestring = jsontoken.generateToken(cart_info);
+        let cookiestring = jsontoken.generate_token(cart_info);
         res.cookie('carttoken', cookiestring, {
             maxAge: 1000 * 60 * 60,
             httpOnly: true
@@ -613,10 +610,10 @@ exports.add_item_cart = function (req, res) {
     }
 };
 
-exports.search_get = function (req, res) {
+exports.search_product = function (req, res) {
     let category_type = '';
     let category_title = '';
-    let isFilter = false;
+    let is_filter = false;
 
     switch (req.query.searchcate) {
         case 'dslr':
@@ -711,7 +708,7 @@ exports.search_get = function (req, res) {
                 };
 
                 if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                    let temp = jsontoken.decodeToken(req.cookies.carttoken);
+                    let temp = jsontoken.decode_token(req.cookies.carttoken);
                     if (temp.userid.toString() === req.user._id.toString()) {
                         cart_info = temp;
                     }
@@ -723,7 +720,7 @@ exports.search_get = function (req, res) {
                     category_title: 'Search Result',
                     product_count: results.products.length,
                     product_items: results.products,
-                    is_filter: isFilter,
+                    is_filter: is_filter,
                     shop_page: true,
                     customer: true,
                     user: req.user,
@@ -735,7 +732,7 @@ exports.search_get = function (req, res) {
                     category_title: 'Search Result',
                     product_count: results.products.length,
                     product_items: results.products,
-                    is_filter: isFilter,
+                    is_filter: is_filter,
                     shop_page: true
                 });
             }
