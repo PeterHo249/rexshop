@@ -64,7 +64,7 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    app.get('/verify', auth.isLoggedIn, function(req, res) {
+    app.get('/verify', auth.isLoggedIn('*'), function(req, res) {
         let mailOptions = {
             to: req.user.email,
             subject: 'Verification Email',
@@ -86,7 +86,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/verify', auth.isLoggedIn, function(req, res) {
+    app.post('/verify', auth.isLoggedIn('*'), function(req, res) {
         if (req.user.code === req.body.code) {
             User.findByIdAndUpdate(req.user._id, {
                 $set: {
@@ -174,7 +174,7 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/reset/:token', auth.isLoggedIn, function(req, res) {
+    app.get('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
         User.findOne({
             resetPasswordToken: req.params.token,
             resetPasswordExpires: {
@@ -195,7 +195,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/reset/:token', auth.isLoggedIn, function(req, res) {
+    app.post('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
         async.waterfall([
                 function(done) {
                     let errors = [];
@@ -256,7 +256,24 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/cart/:id', auth.isLoggedIn, function(req, res) {
+    app.get('/cart', auth.isLoggedIn('customer'), function(req, res) {
+        let cart_info = {
+            cartid: '',
+            userid: '',
+            count: 0,
+            cost: 0
+        };
+        res.render('cart', {
+            cart_page: true,
+            customer: true,
+            user: req.user,
+            item: [],
+            cart: cart_info,
+            is_blank: true
+        });
+    });
+
+    app.get('/cart/:id', auth.isLoggedIn('customer'), function(req, res) {
         let item_list = [];
         let func_count = 0;
         let exec_times = 0;
@@ -297,7 +314,6 @@ module.exports = function(app, passport) {
             }
         ], function() {
             let cart_info = jsontoken.decodeToken(req.cookies.carttoken);
-            console.log(item_list);
             res.render('cart', {
                 cart_page: true,
                 customer: true,
@@ -309,7 +325,7 @@ module.exports = function(app, passport) {
 
     });
 
-    app.post('/clearcart', auth.isLoggedIn, function(req, res) {
+    app.post('/clearcart', auth.isLoggedIn('customer'), function(req, res) {
         Order.findByIdAndRemove(req.body.cartid, function(err) {
             if (err) {
                 console.log(err);
@@ -321,10 +337,11 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/checkoutcart', auth.isLoggedIn, function(req, res) {
+    app.post('/checkoutcart', auth.isLoggedIn('customer'), function(req, res) {
         Order.findByIdAndUpdate(req.body.cartid, {
             $set: {
-                status: 'Processing'
+                status: 'Processing',
+                address: req.body.deliveryaddress
             }
         }, {
             new: false

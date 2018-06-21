@@ -29,6 +29,9 @@ var OrderSchema = new Schema({
         type: Number,
         default: 0
     },
+    address: {
+        type: String
+    },
     item_list: [{
         item: {
             type: Schema.ObjectId,

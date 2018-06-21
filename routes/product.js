@@ -21,7 +21,7 @@ module.exports = function (app, passport) {
     // GET product detail
     app.get('/product/item/:id', product_controller.product_detail_get);
 
-    app.post('/product/cart/add', auth.isLoggedIn, product_controller.add_item_cart);
+    app.post('/product/cart/add', auth.isLoggedIn('customer'), product_controller.add_item_cart);
 
     app.get('/search', product_controller.search_get);
 };
