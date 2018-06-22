@@ -29,7 +29,8 @@ img{max-width:100%;}
 /*end reset*/
 /****-----start-body----****/
 body{
-	background: #035671;
+	background-image: url('/images/trends_background.jpg');
+	background-repeat: repeat;
 	font-family: 'Open Sans', sans-serif;
 
 }
@@ -42,7 +43,7 @@ body a,form li,.submit input[type="submit"]{
 body  h1{
 	text-align: center;
 	font-size: 2.7em;
-	  color: #fff;
+	color: #0e8ce4;
 	padding: 1em 0;
 }
 /*---login-form1--------*/

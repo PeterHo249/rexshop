@@ -101,7 +101,7 @@ app.get('/salesman/order/edit/:id', function(req, res) {
         if (err) {
             return next(err);
         } else {
-            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true })
+            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true });
         }
     });
 });

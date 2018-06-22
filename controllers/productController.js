@@ -6,7 +6,6 @@ let async = require('async');
 let jsontoken = require('../config/jsontoken');
 
 const item_per_page = 24;
-// MARK - Need some test in this
 exports.get_home = function (req, res) {
     async.parallel({
         new_items: function (callback) {
