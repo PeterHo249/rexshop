@@ -54,18 +54,18 @@
 						<div class="order_total">
 							<div class="order_total_content text-md-right">
 								<div class="order_total_title">Order Total:</div>
-								<div class="order_total_amount">{{cart.cost}} vnd</div>
+								<div class="order_total_amount">{{total_cart}} vnd</div>
 							</div>
 						</div>
 
 						{{#if is_shopping}}
 						<div class="cart_buttons">
 							<form action="/clearcart" method="post" class="d-inline">
-								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+								<input type="hidden" name="cartid" value="{{cartid}}">
 							    <button type="submit" class="button cart_button_clear">Clear</button>
 							</form>
 							<form action="/checkoutcart" method="post" id="checkout-form" class="d-inline">
-								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+								<input type="hidden" name="cartid" value="{{cartid}}">
 							    <button type="submit" class="button cart_button_checkout">Payment</button>
 							</form>
 						</div>

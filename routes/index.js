@@ -260,6 +260,35 @@ module.exports = function(app, passport) {
     app.get('/cart', auth.is_logged_in('customer'), order_controller.get_empty_cart);
     app.get('/cart/:id', auth.is_logged_in('customer'), order_controller.get_cart);
     app.post('/clearcart', auth.is_logged_in('customer'), order_controller.clear_cart);
-    app.post('/checkoutcart', auth.is_logged_in('customer'), order_controller.checkout_cart);
+    app.post('/checkoutcart', auth.is_logged_in('customer'), function(req, res) {
+        Order.findByIdAndUpdate(req.body.cartid, {
+            $set: {
+                status: 'Processing',
+                address: req.body.deliveryaddress
+            }
+        }, {
+            new: false
+        }, function(err) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+    
+            let mail_options = {
+                to: req.user.email,
+                subject: 'Confirm Checkout Cart Email',
+                email: true
+            };
+            app.mailer.send('emailcheckoutcart', mail_options, function(err, message) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Email sent');
+                    res.clearCookie('carttoken');
+                    res.redirect('/');
+                }
+            });
+        });
+    });
     app.get('/shoppinghistory', auth.is_logged_in('customer'), order_controller.get_shopping_history);
 };

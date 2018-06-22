@@ -191,6 +191,7 @@ exports.get_cart = function(req, res) {
         let is_shopping = false;
         let func_count = 0;
         let exec_times = 0;
+        let total = 0;
         let address = '';
         async.waterfall([
             function(callback) {
@@ -210,6 +211,8 @@ exports.get_cart = function(req, res) {
                         } else {
                             address = cart.address;
                         }
+                        total = cart.cost;
+                        cartid = cart._id;
                         func_count = cart.item_list.length;
                         cart.item_list.forEach(function(item_in_list) {
                             let item = {
@@ -237,7 +240,18 @@ exports.get_cart = function(req, res) {
                     });
             }
         ], function() {
-            let cart_info = jsontoken.decode_token(req.cookies.carttoken);
+            let cart_info = {
+                cartid: '',
+                userid: '',
+                count: 0,
+                cost: 0
+            };
+            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
+                let temp = jsontoken.decode_token(req.cookies.carttoken);
+                if (temp.userid.toString() === req.user._id.toString()) {
+                    cart_info = temp;
+                }
+            }
             res.render('cart', {
                 cart_page: true,
                 customer: true,
@@ -245,7 +259,9 @@ exports.get_cart = function(req, res) {
                 address: address,
                 item: item_list,
                 cart: cart_info,
-                is_shopping: is_shopping
+                is_shopping: is_shopping,
+                total_cart: total,
+                cartid: cartid
             });
         });
 };
@@ -259,37 +275,6 @@ exports.clear_cart = function(req, res) {
 
         res.clearCookie('carttoken');
         res.redirect('/');
-    });
-};
-
-exports.checkout_cart = function(req, res) {
-    Order.findByIdAndUpdate(req.body.cartid, {
-        $set: {
-            status: 'Processing',
-            address: req.body.deliveryaddress
-        }
-    }, {
-        new: false
-    }, function(err) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        let mail_options = {
-            to: req.user.email,
-            subject: 'Confirm Checkout Cart Email',
-            email: true
-        };
-        app.mailer.send('emailcheckoutcart', mail_options, function(err, message) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('Email sent');
-                res.clearCookie('carttoken');
-                res.redirect('/');
-            }
-        });
     });
 };
 
