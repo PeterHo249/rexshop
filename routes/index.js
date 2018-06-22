@@ -1,13 +1,10 @@
 /* jshint esversion: 6 */
 let User = require('../models/user');
-let Order = require('../models/order');
-let Product = require('../models/product');
 let auth = require('../config/auth');
-let jsontoken = require('../config/jsontoken');
 let async = require('async');
 let crypto = require('crypto');
 let bcrypt = require('bcrypt-nodejs');
-let moment = require('moment');
+let order_controller = require('../controllers/orderController');
 
 module.exports = function(app, passport) {
     /* GET home page. */
@@ -65,8 +62,8 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    app.get('/verify', auth.isLoggedIn('*'), function(req, res) {
-        let mailOptions = {
+    app.get('/verify', auth.is_logged_in('*'), function(req, res) {
+        let mail_options = {
             to: req.user.email,
             subject: 'Verification Email',
             user: {
@@ -74,7 +71,7 @@ module.exports = function(app, passport) {
             },
             email: true
         };
-        app.mailer.send('emailverify', mailOptions, function(err, message) {
+        app.mailer.send('emailverify', mail_options, function(err, message) {
             if (err) {
                 console.log(err);
             } else {
@@ -87,7 +84,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/verify', auth.isLoggedIn('*'), function(req, res) {
+    app.post('/verify', auth.is_logged_in('*'), function(req, res) {
         if (req.user.code === req.body.code) {
             User.findByIdAndUpdate(req.user._id, {
                 $set: {
@@ -140,8 +137,8 @@ module.exports = function(app, passport) {
                             return res.redirect('/login');
                         }
 
-                        user.resetPasswordToken = token;
-                        user.resetPasswordExpires = Date.now() + 3600000;
+                        user.reset_password_token = token;
+                        user.reset_password_Expires = Date.now() + 3600000;
 
                         user.save(function(err) {
                             done(err, token, user);
@@ -149,14 +146,14 @@ module.exports = function(app, passport) {
                     });
                 },
                 function(token, user, done) {
-                    let mailOptions = {
+                    let mail_options = {
                         to: user.email,
                         subject: 'Reset Password Email',
                         host: req.headers.host,
                         token: token,
                         email: true
                     };
-                    app.mailer.send('emailforgot', mailOptions, function(err, message) {
+                    app.mailer.send('emailforgot', mail_options, function(err, message) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -175,10 +172,10 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
+    app.get('/reset/:token', auth.is_logged_in('*'), function(req, res) {
         User.findOne({
-            resetPasswordToken: req.params.token,
-            resetPasswordExpires: {
+            reset_password_token: req.params.token,
+            reset_password_Expires: {
                 $gt: Date.now()
             }
         }, function(err, user) {
@@ -196,12 +193,15 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/reset/:token', auth.isLoggedIn('*'), function(req, res) {
+    app.post('/reset/:token', auth.is_logged_in('*'), function(req, res) {
         async.waterfall([
                 function(done) {
                     let errors = [];
                     if (req.body.password === undefined || req.body.password.length == 0) {
                         errors.push('New password is required.');
+                    }
+                    if (req.body.password.length < 8 || req.body.password.length > 32) {
+                        errors.push('Password must have 8 - 32 letters.');
                     }
                     if (req.body.password !== req.body.repassword) {
                         errors.push('New password and re-enter password have to be the same.');
@@ -216,8 +216,8 @@ module.exports = function(app, passport) {
                     }
 
                     User.findOne({
-                        resetPasswordToken: req.params.token,
-                        resetPasswordExpires: {
+                        reset_password_token: req.params.token,
+                        reset_password_Expires: {
                             $gt: Date.now()
                         }
                     }, function(err, user) {
@@ -227,8 +227,8 @@ module.exports = function(app, passport) {
                         }
 
                         user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
-                        user.resetPasswordToken = undefined;
-                        user.resetPasswordExpires = undefined;
+                        user.reset_password_token = undefined;
+                        user.reset_password_Expires = undefined;
 
                         user.save(function(err) {
                             req.logIn(user, function(err) {
@@ -238,12 +238,12 @@ module.exports = function(app, passport) {
                     });
                 },
                 function(user, done) {
-                    let mailOptions = {
+                    let mail_options = {
                         to: user.email,
                         subject: 'Confirmation Reset Password Email',
                         email: true
                     };
-                    app.mailer.send('emailreset', mailOptions, function(err, message) {
+                    app.mailer.send('emailreset', mail_options, function(err, message) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -257,181 +257,9 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/cart', auth.isLoggedIn('customer'), function(req, res) {
-        let cart_info = {
-            cartid: '',
-            userid: '',
-            count: 0,
-            cost: 0
-        };
-        res.render('cart', {
-            cart_page: true,
-            customer: true,
-            user: req.user,
-            item: [],
-            cart: cart_info,
-            is_blank: true
-        });
-    });
-
-    app.get('/cart/:id', auth.isLoggedIn('customer'), function(req, res) {
-        let item_list = [];
-        let is_shopping = false;
-        let func_count = 0;
-        let exec_times = 0;
-        let address = '';
-        async.waterfall([
-            function(callback) {
-                Order.findById(req.params.id.toString())
-                    .exec(function(error, cart) {
-                        if (error) {
-                            console.log(error);
-                            return;
-                        }
-                        if (cart.status === 'Waiting') {
-                            is_shopping = true;
-                        } else {
-                            is_shopping = false;
-                        }
-                        if (cart.address === '' || cart.address === undefined) {
-                            address = req.user.address;
-                        } else {
-                            address = cart.address;
-                        }
-                        func_count = cart.item_list.length;
-                        cart.item_list.forEach(function(item_in_list) {
-                            let item = {
-                                quantity: item_in_list.amount
-                            };
-                            Product.findById(item_in_list.item.toString())
-                                .exec(function(error, product) {
-                                    if (error) {
-                                        console.log(error);
-                                        return;
-                                    }
-
-                                    item._id = product._id;
-                                    item.name = product.name;
-                                    item.market_price = product.market_price;
-                                    item.total = product.market_price * item.quantity;
-
-                                    item_list.push(item);
-                                    exec_times += 1;
-                                    if (func_count === exec_times) {
-                                        callback();
-                                    }
-                                });
-                        });
-                    });
-            }
-        ], function() {
-            let cart_info = jsontoken.decodeToken(req.cookies.carttoken);
-            res.render('cart', {
-                cart_page: true,
-                customer: true,
-                user: req.user,
-                address: address,
-                item: item_list,
-                cart: cart_info,
-                is_shopping: is_shopping
-            });
-        });
-
-    });
-
-    app.post('/clearcart', auth.isLoggedIn('customer'), function(req, res) {
-        Order.findByIdAndRemove(req.body.cartid, function(err) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-
-            res.clearCookie('carttoken');
-            res.redirect('/');
-        });
-    });
-
-    app.post('/checkoutcart', auth.isLoggedIn('customer'), function(req, res) {
-        Order.findByIdAndUpdate(req.body.cartid, {
-            $set: {
-                status: 'Processing',
-                address: req.body.deliveryaddress
-            }
-        }, {
-            new: false
-        }, function(err) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-
-            let mailOptions = {
-                to: req.user.email,
-                subject: 'Confirm Checkout Cart Email',
-                email: true
-            };
-            app.mailer.send('emailcheckoutcart', mailOptions, function(err, message) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('Email sent');
-                    res.clearCookie('carttoken');
-                    res.redirect('/');
-                }
-            });
-        });
-    });
-
-    app.get('/shoppinghistory', auth.isLoggedIn('customer'), function(req, res) {
-        async.parallel({
-            order_list: function(callback) {
-                Order.find({customer_id: req.user._id})
-                .exec(callback);
-            }
-        }, function(err, results) {
-            if (err) {
-                console.log(err);
-                return err;
-            }
-
-            if (results.order_list === null) {
-                let err = new Error('Product not found');
-                err.status = 404;
-                return err;
-            }
-
-            let is_blank = false;
-            if (results.order_list.length === 0) {
-                is_blank = true;
-            } else {
-                for (let i = 0; i < results.order_list.length; i++) {
-                    results.order_list[i].formated_date = moment(results.order_list[i].date).format('DD-MM-YYYY');
-                }
-            }
-
-            let cart_info = {
-                cartid: '',
-                userid: '',
-                count: 0,
-                cost: 0
-            };
-
-            if (req.cookies.carttoken && req.cookies.carttoken !== '') {
-                let temp = jsontoken.decodeToken(req.cookies.carttoken);
-                if (temp.userid.toString() === req.user._id.toString()) {
-                    cart_info = temp;
-                }
-            }
-
-            res.render('shophistory', {
-                title: 'RexShop',
-                customer: true,
-                cart_page: true,
-                user: req.user,
-                cart: cart_info,
-                order_list: results.order_list,
-                is_blank: is_blank
-            });
-        });
-    });
+    app.get('/cart', auth.is_logged_in('customer'), order_controller.get_empty_cart);
+    app.get('/cart/:id', auth.is_logged_in('customer'), order_controller.get_cart);
+    app.post('/clearcart', auth.is_logged_in('customer'), order_controller.clear_cart);
+    app.post('/checkoutcart', auth.is_logged_in('customer'), order_controller.checkout_cart);
+    app.get('/shoppinghistory', auth.is_logged_in('customer'), order_controller.get_shopping_history);
 };

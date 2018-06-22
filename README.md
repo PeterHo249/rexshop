@@ -17,8 +17,3 @@ This is a Camera eCommerce Website.
 * `$ npm start` to start web server. 
 * `$ npm run devstart` to start web server for develop mode.
 3. **Url:** `localhost:3000`
-
-## Note
-
-* Please run `populatedb.js` file to create demo database and hosting on mLab with following code: `$ node populatedb <your_mLab_database_url>`
-* And replace mLab database url in `app.js` file with your mLab database url.

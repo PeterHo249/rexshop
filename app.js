@@ -8,7 +8,6 @@ var expressHbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var validator = require('express-validator');
 var mailer = require('express-mailer');
-var OrderRouter = require('./routes/order');
 var app = express();
 
 let Order = require('./models/order');
@@ -39,7 +38,7 @@ app.use(validator({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Passport config
+// Config passport
 var passport = require('passport');
 require('./config/passport')(passport);
 var expressSession = require('express-session');
@@ -102,7 +101,7 @@ app.get('/salesman/order/edit/:id', function(req, res) {
         if (err) {
             return next(err);
         } else {
-            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true })
+            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true });
         }
     });
 });
