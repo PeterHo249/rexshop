@@ -15,7 +15,7 @@
 										<div class="cart_item_name">
 											<div class="cart_item_title">Delivery Address:</div>
 											<div class="cart_item_text">
-												<input type="text" name="deliveryaddress" form="checkout-form" required="required" value="{{address}}" style="width: 100%;">
+												<input type="text" name="deliveryaddress" form="checkout-form" required="required" value="{{address}}" style="width: 100%;" {{#unless is_shopping}}readonly="readonly"{{/unless}}>
 											</div>
 										</div>
 									</div>
