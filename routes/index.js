@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 let User = require('../models/user');
+let Order = require('../models/order');
 let auth = require('../config/auth');
 let async = require('async');
 let crypto = require('crypto');
