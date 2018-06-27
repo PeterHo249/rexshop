@@ -1,0 +1,53 @@
+
+<div class="add_product_page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h2 style="color:#069" class="page-title">Add new product</h2>
+                        <br>
+                        <a href="/admin/manage_product" class="btn btn-primary">Back to all products</a>
+                        <br><br>
+                        
+                        <form method="post" action="/admin/manage_product/save" enctype="multipart/form-data">
+                            <table id="mytable" class="table table-bordred table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td><input type="text" name="name"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td><input type="text" name="description"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inventory count</td>
+                                        <td><input type="number" name="inventory_count"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Receipt price</td>
+                                        <td><input type="number" name="receipt_price"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Market price</td>
+                                        <td><input type="number" name="market_price"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Brand</td>
+                                        <td><input type="text" name="brand"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Type</td>
+                                        <td><input type="text" name="type"></td>
+                                    </tr>
+
+                                   
+                                </tbody>
+                            </table>
+                            
+                            <button class="btn btn-primary" type="submit">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

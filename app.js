@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var validator = require('express-validator');
 var mailer = require('express-mailer');
 var app = express();
+var fileUpload = require('express-fileupload');
 
 let User = require('./models/user');
 let Order = require('./models/order');
@@ -24,6 +25,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // view engine setup
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
+
+app.use(fileUpload());
 
 app.use(logger('dev'));
 app.use(express.json());

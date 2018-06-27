@@ -1,0 +1,42 @@
+
+<div class="product_table">
+    <div class="container">
+    <div class="ribbon-front">
+        <h2 style="color:#069">Product Datatable</h2>
+    </div> 
+    <br><br>
+    <a href="/admin/manage_product/add" class="btn btn-info">Add new product</a>
+    <br><br>
+        <div class="row">
+             <div class="col-lg-12">
+                 <div class="table-responsive">
+                     <table id="mytable" class="table table-bordred table-striped">
+                         <thead>
+                            <th>Name</th>
+                            <th>Receipt price</th>
+                            <th>Market_price</th>
+                            <th>Inventory count</th>
+                            <th>Brand</th>
+                            <th>Type</th>
+                            </thead>
+
+                        <tbody>
+                            {{#each items}}
+                            <tr>
+                                <td><a href="/admin/manage_product/{{_id}}">{{name}}</a></td>
+                                <td>{{receipt_price}}</td>
+                                <td>{{market_price}}</td>
+                                <td>{{inventory_count}}</td>
+                                <td>{{brand}}</td>
+                                <td>{{type}}</td>
+                            </tr>
+
+                            {{/each}}
+                        </tbody>
+                            
+                     </table>
+                 </div>
+             </div>
+        </div>
+</div>
+</div>

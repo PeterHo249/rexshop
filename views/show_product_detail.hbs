@@ -1,0 +1,56 @@
+
+<div class="show_product_detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h2 style="color:#069" class="page_title">Show product detail</h2>
+                        <br>
+                        <a href="/admin/manage_product" class="btn btn-primary">Back to all products</a>
+                        <br><br>
+
+                        <table id="mytable" class="table table-bordred table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{item.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td>{{item.description}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Receipt price</td>
+                                    <td>{{item.receipt_price}}</td>
+                                </tr>
+                                <tr>
+                                    <td >Market_price</td>
+                                    <td>{{item.market_price}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Inventory count</td>
+                                    <td>{{item.inventory_count}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Brand</td>
+                                    <td>{{item.brand}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>{{item.type}}</td>
+                                </tr>
+                                <br>
+
+                            </tbody>
+                        </table>
+                        <a href="/admin/manage_product/edit/{{item._id}}" class="btn btn-success">Edit</a>
+                        <br>
+                        <br>
+                        <form action="/admin/manage_product/delete/{{item._id}}" method="post">
+                            {{!-- <button class="btn btn-danger" type="submit">Delete</button> --}}
+                            <button type="submit" class="btn btn-danger" onclick="if (!confirm('Are you sure to delete this record?')) { return false }">Delete</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

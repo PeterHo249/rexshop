@@ -7,7 +7,6 @@ var order_controller = require('../controllers/orderController');
 
 module.exports = function(app, passport) {
     /// PRODUCT ROUTE ///
-
     // GET homepage
     app.get('/salesman/order', order_controller.list_order);
 
@@ -24,5 +23,5 @@ module.exports = function(app, passport) {
 
     app.post('/salesman/order/update/:id', order_controller.update_order);
 
-    app.get('/salesman/order/save', order_controller.save_order);
+    app.post('/salesman/order/save', order_controller.save_order);
 };
