@@ -63,15 +63,26 @@ exports.admin_update_account = function(req, res) {
 }
 
 exports.admin_detele_account = function(req, res) {
-
-    User.findByIdAndRemove({ _id: req.params.id }).exec(function(err, user) {
+    User.findById({ _id: req.params.id }).exec(function(err, user) {
         if (err) {
-            return next(err);
+            console.log("Error:", err);
         } else {
-            console.log("Deleted");
-            res.redirect("/admin/manage_account");
+            if (user.role == 'manager') {
+                console.log("Admin account can't delete!");
+                res.redirect("/admin/manage_account/");
+            } else {
+                User.findByIdAndRemove({ _id: req.params.id }).exec(function(err, user) {
+                    if (err) {
+                        return next(err);
+                    } else {
+                        console.log("Deleted");
+                        res.redirect("/admin/manage_account");
+                    }
+                });
+            }
         }
     });
+
 
 }
 
