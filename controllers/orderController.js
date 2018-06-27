@@ -6,164 +6,104 @@ let jsontoken = require('../config/jsontoken');
 let async = require('async');
 let moment = require('moment');
 
+
 exports.list_order = function(req, res) {
-    async.parallel({
-        orders: function(callback) {
-            Order.find({}).exec(callback);
-        }
-    }, function(err, results) {
+    Order.find({}).exec(function(err, orders) {
         if (err) {
-            return next(err);
-        }
-        if (results.orders == null) {
-            let err = new Error('Order not found');
-            err.status = 404;
-            return next(err);
-        }
-        // if (req.user) {
-        //     res.render('order', {
-        //         title: 'RexShop',
-        //         user: req.user,
-        //         order_items: results.orders,
-        //         salesman: true
-        //     });
-        // } else {
-        //     res.render('order', {
-        //         title: 'RexShop',
-        //         order_items: results.orders,
-        //         salesman: true
-        //     });
-        // }
-        res.render('order', {
-            title: 'RexShop',
-            order_items: results.orders,
-            homepage: true,
-            salesman: true
-        });
-    });
-};
-
-exports.show_order_detail = function(req, res) {
-    async.parallel({
-        order: function(callback) {
-            Order.findById(req.params.id).exec(callback);
-        }
-    }, function(err, results) {
-        if (err) {
-            return next(err);
-        }
-        if (results.product == null) {
-            let err = new Error('Order not found');
-            err.status = 404;
-            return next(err);
-        }
-
-        if (req.user) {
-            res.render('order_detail', {
-                title: 'RexShop',
-                user: req.user,
-                order_items: results.order,
-                salesman: true
-            });
+            console.log("Error:", err);
         } else {
-            res.render('order_detail', {
-                title: 'RexShop',
-                order_item: results.order,
-                salesman: true
-            });
+            res.render('order', { order_items: orders, title: 'RexShop', salesman: true });
         }
-
     });
+}
+
+exports.add_order = function(req, res) {
+    res.render('add_order', { title: 'RexShop', salesman: true });
 };
+
+exports.show_order = function(req, res) {
+    Order.findById(req.params.id).exec(function(err, order) {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            res.render('show_order_detail', { order_item: order, title: 'RexShop', salesman: true });
+        }
+    });
+}
 
 exports.edit_order = function(req, res) {
-    async.parallel({
-        order: function(callback) {
-            Order.findOne({ _id: req.params.id }).exec(callback);
-        }
-    }, function(err, results) {
+    Order.findOne({ _id: req.params.id }).exec(function(err, order) {
         if (err) {
             return next(err);
-        }
-        if (results.product == null) {
-            let err = new Error('Order not found');
-            err.status = 404;
-            return next(err);
-        }
-
-        //Render
-        if (req.user) {
-            res.render('order_edit', {
-                title: 'RexShop',
-                user: req.user,
-                order_item: results.order,
-                salesman: true
-            });
         } else {
-            res.render('order_edit', {
-                title: 'RexShop',
-                order_item: results.order,
-                salesman: true
-            });
+            res.render('edit_order', { order_item: order, title: 'RexShop', salesman: true })
         }
     });
-};
-
-exports.update_order = function(req, res) {
-    async.parallel({
-        order: function(callback) {
-            Order.findByIdAndUpdate(req.params.id, {
-                $set: {
-                    staff_id: req.body.staff_id,
-                    customer_id: req.body.customer_id,
-                    cost: req.body.cost,
-                    date: req.body.date,
-                    status: req.body.status,
-                    shopping: req.body.shopping,
-                    count: req.body.count
-                }
-            }, { new: false }, function(err, result) {
-                if (err) {
-                    console.log(err);
-                }
-
-                res.redirect("/salesman/order/" + order._id);
-            });
-        }
-    });
-};
+}
 
 exports.delete_order = function(req, res) {
-    async.parallel({
-        function(callback) {
-            Order.findByIdAndRemove({ _id: req.params.id }, function(err) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log("Deleted");
-                    res.redirect("/salesman/order");
-                }
-            });
+    Order.findByIdAndRemove({ _id: req.params.id }).exec(function(err, order) {
+        if (err) {
+            return next(err);
+        } else {
+            console.log("Deleted");
+            res.redirect("/salesman/order");
         }
     });
-};
+}
 
+exports.update_order = function(req, res) {
+    Order.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: {
+            customer_id: req.body.customer_id,
+            cost: req.body.cost,
+            date: req.body.date,
+            status: req.body.select_picker,
+            count: req.body.count,
+            item_list: req.body.item_list
 
-exports.create_order = function(req, res) {
-    res.render('order_add', {
-        salesman: true
-    })
-};
-
-exports.order_save = function(req, res) {
-    var order = new Order(req.body);
-    order.save(function(err) {
+        }
+    }, { new: true }, function(err, order) {
         if (err) {
             console.log(err);
-        } else {
-            console.log("Created");
-            res.redirect("/salesman/order/" + order._id);
         }
+
+        res.redirect("/salesman/order/" + order._id);
+    });
+}
+
+exports.save_order = function(req, res) {
+    var customer_id = req.body.customer_id;
+    var date = req.body.date;
+    var status = req.body.select_picker;
+    var item = req.body.item;
+    var count = req.body.count;
+    var count2 = Number(count);
+    Product.findById({ _id: item }).exec(function(err, product) {
+        if (err) {
+            console.log(err);
+        }
+
+        var order = new Order({
+            customer_id: customer_id,
+            date: date,
+            status: status,
+            cost: '',
+            count: count2,
+            item_list: []
+        });
+        order.cost = product.market_price * count2;
+        order.item_list.push({ item: item, amount: count2 });
+        order.save(function(err) {
+            if (err) {
+                console.log(err);
+                res.render('add_order', { title: 'RexShop', salesman: true });
+            } else {
+                console.log("Successfully created an order.");
+                res.redirect('/salesman/order/' + order._id);
+            }
+        });
+
     });
 };
 

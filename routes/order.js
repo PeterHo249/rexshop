@@ -1,22 +1,27 @@
 let express = require('express');
 let router = express.Router();
 let auth = require('../config/auth');
+
 // Require controller module
 var order_controller = require('../controllers/orderController');
 
-//ORDER ROUTE ///
-router.get('/salesman/order', order_controller.list_order);
+module.exports = function(app, passport) {
+    /// PRODUCT ROUTE ///
+    // GET homepage
+    app.get('/salesman/order', order_controller.list_order);
 
-router.get('/salesman/order/:id', order_controller.show_order_detail);
+    // GET product catagories
+    app.get('/salesman/order/add', order_controller.add_order);
 
-router.get('/salesman/order/add', order_controller.create_order);
+    // GET product category and brand
+    app.get('/salesman/order/:id', order_controller.show_order);
 
-router.post('salesman/order/save', order_controller.order_save);
+    // GET product detail
+    app.get('/salesman/order/edit/:id', order_controller.edit_order);
 
-router.get('/salesman/order/edit/:id', order_controller.edit_order);
+    app.post('/salesman/order/delete/:id', order_controller.delete_order);
 
-router.post('/salesman/order/update/:id', order_controller.update_order);
+    app.post('/salesman/order/update/:id', order_controller.update_order);
 
-router.post('/salesman/order/detele/:id', order_controller.delete_order);
-
-module.exports = router;
+    app.post('/salesman/order/save', order_controller.save_order);
+};

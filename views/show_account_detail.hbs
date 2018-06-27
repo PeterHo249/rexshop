@@ -1,0 +1,60 @@
+
+<div class="show_account_detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h2 style="color:#069" class="page_title">Show account detail</h2>
+                        <br>
+                        <a href="/admin/manage_account" class="btn btn-primary">Back to all accounts</a>
+                        <br><br>
+
+                        <table id="mytable" class="table table-bordred table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{item.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>{{item.address}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone Num.</td>
+                                    <td>{{item.phone_number}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="">Role</td>
+                                    <td>{{item.role}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Username</td>
+                                    <td>{{item.username}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Password</td>
+                                    <td>{{item.password}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{item.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Verified</td>
+                                    <td>{{item.verified}}</td>
+                                </tr>
+                                <br>
+
+                            </tbody>
+                        </table>
+                        <a href="/admin/manage_account/edit/{{item._id}}" class="btn btn-success">Edit</a>
+                        <br>
+                        <br>
+                        <form action="/admin/manage_account/delete/{{item._id}}" method="post">
+                            {{!-- <button class="btn btn-danger" type="submit">Delete</button> --}}
+                            <button type="submit" class="btn btn-danger" onclick="if (!confirm('Are you sure to delete this record?')) { return false }">Delete</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

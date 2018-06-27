@@ -1,40 +1,40 @@
-<div class="edit_page">
+<div class="edit_account_page">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h2 style="color:#069" class="page-title">Edit order</h2>
+                        <h2 style="color:#069" class="page-title">Edit Account</h2>
                         <br>
-                        <a href="/salesman/order" class="btn btn-primary">Back to all orders</a>
+                        <a href="/admin/manage_account" class="btn btn-primary">Back to all accounts</a>
                         <br><br>
 
-                        <form method="post" action="/salesman/order/update/{{order_item._id}}">
+                        <form method="post" action="/admin/manage_account/update/{{item._id}}">
                             <table id="mytable" class="table table-bordred table-striped">
                                 <tbody>
                                     <tr>
-                                        <td>Customer ID</td>
-                                        <td><input type="text" name="customer_id" value="{{order_item.customer_id}}" /></td>
+                                        <td>Name</td>
+                                        <td><input type="text" name="name" value="{{item.name}}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Cost</td>
-                                        <td><input type="text" name="cost" value="{{order_item.cost}}" /></td>
+                                        <td>Address</td>
+                                        <td><input type="text" name="address" value="{{item.address}}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Date</td>
-                                        <td><input type="text" name="date" value="{{order_item.date}}" /></td>
+                                        <td>Phone Num.</td>
+                                        <td><input type="text" name="phone" value="{{item.phone_number}}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Status</td>
+                                        <td>Role</td>
                                     <td>
                                         <select name="select_picker">
-                                            <option value="Done">Done</option>
-                                            <option value="Waiting">Waiting</option>
-                                            <option value="Processing">Processing</option>
+                                            <option value="guest">Guest</option>
+                                            <option value="salesman">Salesman</option>
+                                            <option value="customer">Customer</option>
                                         </select>
                                     </td>
                                     </tr>
                                     <tr>
-                                        <td>Count</td>
-                                        <td><input type="text" name="count" value="{{order_item.count}}" /></td>
+                                        <td>Email</td>
+                                        <td><input type="text" name="password"  value="{{item.email}}" /></td>
                                     </tr>
 
                                     

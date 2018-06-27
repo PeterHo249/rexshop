@@ -45,7 +45,7 @@ module.exports = function(app, passport) {
                     res.redirect('/salesman/order');
                     break;
                 case 'manager':
-                    res.redirect('/manager');
+                    res.redirect('/admin');
                     break;
             }
         }
