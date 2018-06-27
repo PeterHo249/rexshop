@@ -7,6 +7,21 @@
 				<div class="col-lg-10 offset-lg-1">
 					<div class="cart_container">
 						<div class="cart_title">Shopping Cart</div>
+						{{#unless is_blank}}
+						<div class="cart_items">
+							<ul class="cart_list">
+								<li class="cart_item clearfix">
+									<div>
+										<div class="cart_item_name">
+											<div class="cart_item_title">Delivery Address:</div>
+											<div class="cart_item_text">
+												<input type="text" name="deliveryaddress" form="checkout-form" required="required" value="{{address}}" style="width: 100%;" {{#unless is_shopping}}readonly="readonly"{{/unless}}>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
 						<div class="cart_items">
 							<ul class="cart_list">
                                 {{#each item}}
@@ -39,20 +54,25 @@
 						<div class="order_total">
 							<div class="order_total_content text-md-right">
 								<div class="order_total_title">Order Total:</div>
-								<div class="order_total_amount">{{cart.cost}} vnd</div>
+								<div class="order_total_amount">{{total_cart}} vnd</div>
 							</div>
 						</div>
 
+						{{#if is_shopping}}
 						<div class="cart_buttons">
 							<form action="/clearcart" method="post" class="d-inline">
-								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+								<input type="hidden" name="cartid" value="{{cartid}}">
 							    <button type="submit" class="button cart_button_clear">Clear</button>
 							</form>
-							<form action="/checkoutcart" method="post" class="d-inline">
-								<input type="hidden" name="cartid" value="{{cart.cartid}}">
+							<form action="/checkoutcart" method="post" id="checkout-form" class="d-inline">
+								<input type="hidden" name="cartid" value="{{cartid}}">
 							    <button type="submit" class="button cart_button_checkout">Payment</button>
 							</form>
 						</div>
+						{{/if}}
+						{{else}}
+						<div class="cart_title">Nothing in your cart!</div>
+						{{/unless}}
 					</div>
 				</div>
 			</div>

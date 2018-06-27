@@ -36,6 +36,8 @@ var ProductSchema = new Schema({
     }
 });
 
+ProductSchema.index({'name': 'text'});
+
 ProductSchema.plugin(random_plugin);
 
 ProductSchema.virtual('url')

@@ -1,0 +1,46 @@
+<!-- Cart -->
+{{!Argument: item, }}
+
+	<div class="cart_section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1">
+					<div class="cart_container">
+						<div class="cart_title">Shopping History</div>
+						{{#unless is_blank}}
+						<div class="cart_items">
+							<ul class="cart_list">
+                                {{#each order_list}}
+                                <a href="/cart/{{_id}}">
+								<li class="cart_item clearfix">
+									<div class="cart_item_info d-flex flex-md-row flex-column justify-content-between">
+										<div class="cart_item_name cart_info_col">
+											<div class="cart_item_title">Date</div>
+											<div class="cart_item_text">{{formated_date}}</div>
+										</div>
+										<div class="cart_item_quantity cart_info_col">
+											<div class="cart_item_title">Quantity</div>
+											<div class="cart_item_text">{{count}}</div>
+										</div>
+										<div class="cart_item_price cart_info_col">
+											<div class="cart_item_title">Cost</div>
+											<div class="cart_item_text">{{cost}}</div>
+										</div>
+										<div class="cart_item_total cart_info_col">
+											<div class="cart_item_title">Delivery address</div>
+											<div class="cart_item_text">{{address}}</div>
+										</div>
+									</div>
+								</li>
+                                </a>
+                                {{/each}}
+							</ul>
+						</div>
+						{{else}}
+						<div class="cart_title">You haven't bought anything yet!</div>
+						{{/unless}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

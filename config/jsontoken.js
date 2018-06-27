@@ -2,10 +2,10 @@
 let jwt = require('jsonwebtoken');
 
 let token_key = 'secret key for token';
-exports.generateToken = function (object) {
+exports.generate_token = function (object) {
     return jwt.sign(object, token_key);
 };
 
-exports.decodeToken = function (token) {
+exports.decode_token = function (token) {
     return jwt.verify(token, token_key);
 };

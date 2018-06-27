@@ -1,9 +1,13 @@
 /* jshint esversion: 6 */
 
-exports.isLoggedIn = function (req, res, next) {
+exports.is_logged_in = function (role) {
+  return function (req, res, next) {
     if (req.isAuthenticated()) {
-      return next();
+      if (req.user.role === role || role === '*') {
+        return next();
+      }
     }
-  
+
     res.redirect('/login');
-  }
+  };
+};

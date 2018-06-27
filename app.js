@@ -42,7 +42,7 @@ app.use(validator({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Passport config
+// Config passport
 var passport = require('passport');
 require('./config/passport')(passport);
 var expressSession = require('express-session');
@@ -76,8 +76,6 @@ require('./routes/product')(app, passport);
 require('./routes/user')(app, passport);
 require('./routes/admin')(app, passport);
 require('./routes/order')(app, passport);
-
-
 
 
 // catch 404 and forward to error handler

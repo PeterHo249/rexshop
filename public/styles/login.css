@@ -235,11 +235,11 @@ img {
 
 
 /****-----start-body----****/
+body{
+	background-image: url('/images/trends_background.jpg');
+	background-repeat: repeat;
+	font-family: 'Open Sans', sans-serif;
 
-body {
-    background: #035671;
-    font-family: 'Open Sans', sans-serif;
-}
 
 body a,
 form li,
@@ -250,11 +250,11 @@ form li,
     -o-transition: 0.1s all;
 }
 
-body h1 {
-    text-align: center;
-    font-size: 2.7em;
-    color: #fff;
-    padding: 1em 0;
+body  h1{
+	text-align: center;
+	font-size: 2.7em;
+	color: #0e8ce4;
+	padding: 1em 0;
 }
 
 
